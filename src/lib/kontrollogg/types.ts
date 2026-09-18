@@ -12,8 +12,12 @@
 /** Utfall per regel, enligt shared decision "RuleOutcome/Finding data contract". */
 export type Regelutfall = 'uppfylld' | 'fynd' | 'ej tillämplig' | 'ej genomförd';
 
-/** Metodkolumnen i regelkatalogen (`docs/adr.md#beslut-1-regler-som-datadriven-konfiguration`). */
-export type Regelmetod = 'M' | 'M+L' | 'C' | 'H';
+/**
+ * Metodvärdet från regelkatalogen: ett grundvärde (M, M+L, C, H) eller en
+ * kombination av dem (M/C, M+L/C, C/H, M → H) enligt FR1. Vokabulären ägs och
+ * valideras av regelkatalogen (S01), inte av loggen.
+ */
+export type Regelmetod = string;
 
 export interface RegelutfallPost {
   regelId: string;
