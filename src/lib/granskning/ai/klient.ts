@@ -78,6 +78,14 @@ export function skapaClaudeKlient(alternativ: ClaudeKlientAlternativ): AiKlient 
     modell,
     async bedom({ system, anvandare }) {
       let text: string;
+      // AbortSignal.timeout() håller avsiktligt inte event-loopen vid liv, så en
+      // fetch som varken svarar eller håller loopen öppen får processen att ta slut
+      // innan timeouten löser ut. En egen ref:ad timer gör timeouten observerbar.
+      const avbrytare = new AbortController();
+      const timer = setTimeout(
+        () => avbrytare.abort(new DOMException('Timeout', 'TimeoutError')),
+        timeoutMs,
+      );
       try {
         const svar = await fetchFn(API_URL, {
           method: 'POST',
@@ -92,7 +100,7 @@ export function skapaClaudeKlient(alternativ: ClaudeKlientAlternativ): AiKlient 
             system,
             messages: [{ role: 'user', content: anvandare }],
           }),
-          signal: AbortSignal.timeout(timeoutMs),
+          signal: avbrytare.signal,
         });
         if (!svar.ok) return { ok: false, fel: 'transport', detalj: `HTTP ${svar.status}` };
         const kropp = (await svar.json()) as { content?: { type?: string; text?: string }[] };
@@ -101,6 +109,8 @@ export function skapaClaudeKlient(alternativ: ClaudeKlientAlternativ): AiKlient 
         const namn = fel instanceof Error ? fel.name : '';
         if (namn === 'TimeoutError' || namn === 'AbortError') return { ok: false, fel: 'timeout' };
         return { ok: false, fel: 'transport', detalj: fel instanceof Error ? fel.message : String(fel) };
+      } finally {
+        clearTimeout(timer);
       }
 
       const verdikt = tolkaVerdikt(text);
