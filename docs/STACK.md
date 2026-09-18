@@ -1,12 +1,13 @@
 # Technology Stack
 
-> Planned stack per `docs/adr.md` – no code scaffolded yet (no package.json in the repo). Regenerate this document once the app exists, via the `andthen-map-codebase` skill.
+> Partly realised: `package.json`, `tsconfig.json` and the shared library under `src/lib/` exist (S02). The Next.js app is still planned per `docs/adr.md`. Regenerate this document once the app exists, via the `andthen-map-codebase` skill.
 
 ## Languages
 
 | Language | Version | Notes |
 |----------|---------|-------|
-| TypeScript | TBD | ADR Skiss: "Next.js-app (Node/TypeScript, fullstack)" |
+| TypeScript | 5.x (not installed) | ADR Skiss: "Next.js-app (Node/TypeScript, fullstack)". Sources run under Node's type stripping, so no build step and no dependency; `tsc` is only needed for `npm run typecheck` |
+| Node.js | >= 22.18 | Required for type stripping and the built-in test runner |
 
 ## Frameworks & Libraries
 
@@ -30,4 +31,4 @@
 
 | Tool | Purpose | Config |
 |------|---------|--------|
-| TBD | – | – |
+| `node --test` | Test runner (built in, no dependency) | `npm test` |

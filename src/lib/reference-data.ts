@@ -1,17 +1,18 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_KONTAKTREGISTER_PATH = path.join(MODULE_DIR, "..", "data", "kontaktregister.json");
+const DEFAULT_KONTAKTREGISTER_PATH = path.join(MODULE_DIR, '..', '..', 'data', 'kontaktregister.json');
 const DEFAULT_KLASSIFICERINGSSTRUKTUR_PATH = path.join(
   MODULE_DIR,
-  "..",
-  "data",
-  "klassificeringsstruktur.json",
+  '..',
+  '..',
+  'data',
+  'klassificeringsstruktur.json',
 );
 
-export type OrganisationTyp = "myndighet" | "kommun" | "foretag" | "organisation" | "enskild_tjansteperson";
+export type OrganisationTyp = 'myndighet' | 'kommun' | 'foretag' | 'organisation' | 'enskild_tjansteperson';
 
 export interface Organisation {
   namn: string;
@@ -40,13 +41,13 @@ export interface Klassificeringsstruktur {
 }
 
 export function loadKontaktregister(filePath: string = DEFAULT_KONTAKTREGISTER_PATH): Kontaktregister {
-  return JSON.parse(readFileSync(filePath, "utf-8")) as Kontaktregister;
+  return JSON.parse(readFileSync(filePath, 'utf-8')) as Kontaktregister;
 }
 
 export function loadKlassificeringsstruktur(
   filePath: string = DEFAULT_KLASSIFICERINGSSTRUKTUR_PATH,
 ): Klassificeringsstruktur {
-  return JSON.parse(readFileSync(filePath, "utf-8")) as Klassificeringsstruktur;
+  return JSON.parse(readFileSync(filePath, 'utf-8')) as Klassificeringsstruktur;
 }
 
 /** Fails closed: an unmatched namn/e-post returns undefined, never a partial or default match. */
