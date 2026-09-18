@@ -36,37 +36,37 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI02,TI03,TI07] Ett kommando kör hela 20-fallssviten**
+- [x] **S01 [OC01] [TI02,TI03,TI07] Ett kommando kör hela 20-fallssviten**
   - **Given** alla 20 `casedetails/testcases.json`-fall med sina syntetiska fixturer på plats
   - **When** testsvitskommandot körs
   - **Then** varje fall läses in och körs genom exakt en granskningsomgång, och rapporten listar ett resultat per `case_id`
 
-- [ ] **S02 [OC01,OC04] [TI03,TI04] Korrekt baseline ger Godkänd (TC-01)**
+- [x] **S02 [OC01,OC04] [TI03,TI04] Korrekt baseline ger Godkänd (TC-01)**
   - **Given** TC-01 (`expected_status: "godkänd"`, `expected_findings: []`)
   - **When** sviten kör TC-01 genom S03–S06
   - **Then** den faktiska statusen är exakt "Godkänd", inga fynd redovisas, och fallet markeras godkänt i rapporten
 
-- [ ] **S03 [OC03] [TI04,TI05] Auto-rättat fynd räknas som hittat (TC-08)**
+- [x] **S03 [OC03] [TI04,TI05] Auto-rättat fynd räknas som hittat (TC-08)**
   - **Given** TC-08, där AD-KONTAKT-5 auto-rättas av granskningsomgången ("Kopia till" töms)
   - **When** komparatorn jämför faktiska fynd mot `expected_findings`
   - **Then** AD-KONTAKT-5 räknas som hittat (inte saknat), den faktiska statusen "Autokorrigerad" uppfyller `expected_status: "flaggad"`, och fallet markeras godkänt
 
-- [ ] **S04 [OC02] [TI01,TI03] Zip-fixturen driver riktig uppackning (TC-15)**
+- [x] **S04 [OC02] [TI01,TI03] Zip-fixturen driver riktig uppackning (TC-15)**
   - **Given** TC-15:s riktiga syntetiska zip-fil med färre filer än `antal_bilagor: 3`, härledd ur `ar_zip=true`/`ar_uppackad=false`
   - **When** sviten kör TC-15 genom pipelinen
   - **Then** både FIL-ZIP-1 och FIL-ANTAL-1 hamnar som hittade i jämförelsen (FIL-ZIP-1 auto-rättat, FIL-ANTAL-1 hittat i omkörningen mot det uppackade innehållet), i linje med `expected_findings`
 
-- [ ] **S05 [OC02] [TI01,TI02] Saknad testfil är ett fel i testsviten, inte godkänt (TC-16)**
+- [x] **S05 [OC02] [TI01,TI02] Saknad testfil är ett fel i testsviten, inte godkänt (TC-16)**
   - **Given** TC-16:s korrupt-fil-fixtur saknas på disk
   - **When** sviten kör TC-16
   - **Then** körningen rapporterar TC-16 som ett testsvitsfel som namnger den saknade fixturen, och räknar det varken som godkänt eller hoppar tyst över det
 
-- [ ] **S06 [OC03] [TI06] Oväntat extra fynd listas separat**
+- [x] **S06 [OC03] [TI06] Oväntat extra fynd listas separat**
   - **Given** ett fall vars faktiska körning ger ett fynd som inte finns i `expected_findings` (t.ex. en av TC-20:s tolererade extrafynd enligt PRD:ns Assumptions)
   - **When** rapporten byggs
   - **Then** det fyndet hamnar i en egen "extra fynd"-lista med regel-ID och förklaring, och avgör inte ensamt om fallet blir underkänt
 
-- [ ] **S07 [OC01] [TI07] Ett fals fel stoppar inte resten av sviten**
+- [x] **S07 [OC01] [TI07] Ett fals fel stoppar inte resten av sviten**
   - **Given** ett fall vars faktiska resultat avviker från `expected_status`/`expected_findings` (t.ex. en ännu ej rättad motorbugg)
   - **When** sviten kör samtliga 20 fall
   - **Then** det avvikande fallet rapporteras underkänt med en diff mot förväntat resultat, och alla övriga 19 fall slutförs och redovisas i samma körning
@@ -74,10 +74,10 @@
 
 ## Structural Criteria
 
-- [ ] Ett fals jämförelsefel stoppar aldrig sviten; alla 20 fall (plus ett medvetet trasigt fall) redovisas i samma körning.
-- [ ] Varje filberoende fall pekar mot en riktig fixtur på disk med den egenskap fallets `fil`-flaggor anger; en saknad fixtur är alltid ett testsvitsfel, aldrig ett godkänt fall.
-- [ ] Datum, diarienummer och skyddskod är oförändrade före/efter för samtliga 20 fall (bindingConstraint, `docs/prd.md#constraints`).
-- [ ] Endast `testcases.json`-härledda syntetiska fixturer når inläsning eller AI-tjänsten; ingen `casedetails/*.docx`-export används som testindata (NFR-Security, PRD Assumptions).
+- [x] Ett fals jämförelsefel stoppar aldrig sviten; alla 20 fall (plus ett medvetet trasigt fall) redovisas i samma körning.
+- [x] Varje filberoende fall pekar mot en riktig fixtur på disk med den egenskap fallets `fil`-flaggor anger; en saknad fixtur är alltid ett testsvitsfel, aldrig ett godkänt fall.
+- [x] Datum, diarienummer och skyddskod är oförändrade före/efter för samtliga 20 fall (bindingConstraint, `docs/prd.md#constraints`).
+- [x] Endast `testcases.json`-härledda syntetiska fixturer når inläsning eller AI-tjänsten; ingen `casedetails/*.docx`-export används som testindata (NFR-Security, PRD Assumptions).
 
 
 ## Scope & Boundaries
@@ -129,31 +129,31 @@ file   | docs/s04-deterministisk-granskningsmotor.md#technical-overview | Bekrä
 
 ### Implementation Tasks
 
-- [ ] **TI01** Syntetiska fixturer täcker varje distinkt `fil`-flaggprofil i `testcases.json`, med riktiga filer vars egenskaper matchar flaggorna
+- [x] **TI01** Syntetiska fixturer täcker varje distinkt `fil`-flaggprofil i `testcases.json`, med riktiga filer vars egenskaper matchar flaggorna
   - Sex profiler: standard/giltig (de 14 fall med identiska `ar_*`-flaggor), osignerad (TC-14), zip med för få filer (TC-15), oläsbar/korrupt (TC-16), enkelsidig skanning av dubbelsidigt original (TC-17), filändelselös minimal fil (TC-20); TC-18:s särdrag (`mejlmissiv_diarieford`) är fil-metadata, inte en binär egenskap, och återanvänder standardfixturen
   - **Verify**: alla sex profiler finns som riktiga filer på disk och har faktiskt den angivna egenskapen (TC-16:s fixtur går verkligen inte att öppna, TC-15:s zip innehåller verkligen färre poster än `antal_bilagor`); samtliga 20 fall pekar mot en existerande fixturväg; ingen fixtur är en kopia av eller läsning från `casedetails/Ärende *.docx`
 
-- [ ] **TI02** Köraren läser in varje `testcases.json`-fall med sin uppslagna fixtur via S03
+- [x] **TI02** Köraren läser in varje `testcases.json`-fall med sin uppslagna fixtur via S03
   - Använder S03:s inläsningsmodul (`docs/s03-inlasning-av-dokument.md`) per fall; ett fall vars fixtur saknas registreras som ett testsvitsfel, inte som överhoppat eller godkänt
   - **Verify**: alla 20 fall läses in till 20 distinkta Färdig-dokument när fixturerna finns; ett fall med en medvetet borttagen fixtur rapporteras som fel, och körningen fortsätter till övriga fall
 
-- [ ] **TI03** Köraren driver varje inläst dokument genom exakt en granskningsomgång via S06:s orkestreringsentrypunkt
+- [x] **TI03** Köraren driver varje inläst dokument genom exakt en granskningsomgång via S06:s orkestreringsentrypunkt
   - Anropar den callable S06 exponerar (`docs/plan.json#sharedDecisions.1`) en gång per fall; simulerar inte handläggarens "Skicka för ny granskning"-loop (S06:s egen interna omkörning efter auto-rättning gäller ändå)
   - **Verify**: TC-08 och TC-15 visar sina auto-rättade fält ändrade, och deras auto-rättningsbara fynd finns med i omgångens utfall
 
-- [ ] **TI04** Komparatorn mappar varje falls faktiska status mot `expected_status` enligt FR4:s godkänd/flaggad-regel
+- [x] **TI04** Komparatorn mappar varje falls faktiska status mot `expected_status` enligt FR4:s godkänd/flaggad-regel
   - `"godkänd"` kräver den exakta faktiska statusen "Godkänd"; `"flaggad"` accepterar valfri av Autokorrigerad/Åtgärd krävs/Mänsklig bedömning (`docs/prd.md#fr4-statussättning` AC)
   - **Verify**: TC-01/TC-02 ("godkänd") underkänns av komparatorn om faktisk status är något annat än "Godkänd"; TC-08 ("flaggad", faktisk status Autokorrigerad) godkänns av statusjämförelsen
 
-- [ ] **TI05** Komparatorn matchar faktiska fynd mot `expected_findings` per regel-ID, och räknar auto-rättade fynd som hittade
+- [x] **TI05** Komparatorn matchar faktiska fynd mot `expected_findings` per regel-ID, och räknar auto-rättade fynd som hittade
   - Läser omgångens fynd och – där omgångens eget svar inte redan flaggar auto-rättning – kontrolloggens före/efter-värden (`docs/plan.json#sharedDecisions.2`) för AD-KONTAKT-5 och FIL-ZIP-1 (`docs/prd.md#fr5-automatisk-rättning-av-säkra-fel`); bekräftar också att datum, diarienummer och skyddskod är oförändrade
   - **Verify**: TC-08:s AD-KONTAKT-5 och TC-15:s FIL-ZIP-1/FIL-ANTAL-1 markeras hittade; ett regel-ID i `expected_findings` som varken finns i omgångens fynd eller loggens auto-rättningspost markeras saknat; en stubbad ändring av datum/diarienummer/skyddskod på valfritt fall flippar det fallet till testsvitsfel oavsett status-/fyndmatchning
 
-- [ ] **TI06** Rapporten listar extra fynd separat utan att ensamt underkänna fallet
+- [x] **TI06** Rapporten listar extra fynd separat utan att ensamt underkänna fallet
   - Ett fynd vars regel-ID inte finns i fallets `expected_findings` läggs i en egen "extra fynd"-lista med regel-ID och förklaring; fallets godkänt/underkänt avgörs bara av hittade/saknade förväntade fynd och statusmatchning
   - **Verify**: ett stubbat extra fynd på ett valfritt fall hamnar i det fallets extra-fynd-lista och flippar inte ensamt fallet från godkänt till underkänt
 
-- [ ] **TI07** Sviten körs med ett kommando och rapporterar per-fall och sammanställning utan att stanna på ett fals fel
+- [x] **TI07** Sviten körs med ett kommando och rapporterar per-fall och sammanställning utan att stanna på ett fals fel
   - En entrypunkt (CLI/npm-skript) itererar alla 20 fall; varje falls inläsning/omgång/jämförelse fångas så att ett fel i ett fall rapporteras i stället för att kasta och avbryta körningen
   - **Verify**: kommandot körs med ett falls fixtur borttagen och producerar ändå en fullständig rapport för de övriga 19 fallen plus det ena testsvitsfelet; sammanställningsraden anger antal godkända av 20
 
@@ -168,9 +168,18 @@ file   | docs/s04-deterministisk-granskningsmotor.md#technical-overview | Bekrä
 
 ## Final Validation Checklist
 
-- [ ] Nya fixturfiler ligger i en egen katalog och skriver aldrig över någon befintlig fil i `casedetails/` (t.ex. `Ärende *.docx`, `Test *.png`, `testcases.json`).
+- [x] Nya fixturfiler ligger i en egen katalog och skriver aldrig över någon befintlig fil i `casedetails/` (t.ex. `Ärende *.docx`, `Test *.png`, `testcases.json`).
 
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/testsvit/` – `fixturer.ts` (TI01, profilval och uppslag), `komparator.ts` (TI04–TI06, ren funktion), `kor.ts` (TI02, TI03, TI07 och CLI). Fixturerna ligger i `testfixturer/` i reporoten; inget i `casedetails/` har rörts, och ett test söker källkoden efter referenser till ärendeexporterna.
+- Kommandot är `npm run testsvit`. Det skriver en rad per fall med hittade, saknade och extra fynd, en sammanställningsrad och sökvägen till körningens kontrollogg. Exitkod 1 vid underkända fall eller testsvitsfel.
+- **AI-klienten är stubbad, enligt storyns egen Testing Strategy.** Det ger ett tak: sex fall har fynd som bara en riktig modell kan avgöra. De får domen "kräver live-läge" med de saknade regel-ID:na utskrivna, aldrig "godkänt". Domen sätts bara när *varje* saknat fynd hör till en regel vars metod innehåller C eller H – en deterministisk regel som slutar fungera underkänns fortfarande högljutt.
+- Resultat i stubbläge: **14 av 20 godkända, 6 kräver live-läge (TC-04, TC-05, TC-11, TC-12, TC-19, TC-20), 0 underkända, 0 testsvitsfel.** TC-20 får rätt status (Mänsklig bedömning) men saknar tre innehållsfynd, och hamnar därför också i live-hinken.
+- Sex fixturprofiler: standard, osignerad, zip med för få poster, korrupt, enkelsidig skanning och fil utan filändelse. Profilen väljs ur fallets `fil`-flaggor, inte ur filnamnet, så de 14 standardfallen delar en fixtur. TC-18:s `mejlmissiv_diarieford` är registreringsmetadata, inte en filegenskap, och använder standardfixturen.
+- Fixturerna har verkligen sina egenskaper: den korrupta PDF:en saknar både objekt och `%%EOF` och går inte att öppna, zip-filen innehåller två poster mot TC-15:s `antal_bilagor: 3`. Ett test verifierar båda i stället för att lita på filnamnen.
+- Auto-rättade fynd räknas som hittade via `tillampadeRattningar` från S06:s omgång. Det behövdes: efter omkörningen rapporterar TC-08 inte längre AD-KONTAKT-5, eftersom fältet är rensat. Rättningen är beviset på att regeln slog till.
+- Fältskyddet kontrolleras med en ögonblicksbild före och efter varje fall. Ett ändrat datum, diarienummer eller skyddskod ger domen testsvitsfel oavsett status- och fyndmatchning.
+- **Ändring utanför S09:** `tsconfig.json` fick `allowJs: true` och `lib` utökat med `lib/`-katalogen, eftersom köraren använder S03:s `lib/ingest.js` som fortfarande är otypad JavaScript. Nästa gång S03 rörs är det värt att flytta den till TypeScript under `src/lib/`.
+- Dubbletten `test/fixtures/anbud_bilagor.zip` (S06:s egen testfixtur) och `testfixturer/anbud_bilagor.zip` (S09:s) är avsiktlig: S06 ska gå att testa utan S09:s fixturuppsättning.

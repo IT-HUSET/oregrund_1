@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node --test \"src/**/*.test.ts\" \"test/**/*.test.js\"",
     "test:watch": "node --test --watch \"src/**/*.test.ts\" \"test/**/*.test.js\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "testsvit": "node src/testsvit/kor.ts"
   }
 }
