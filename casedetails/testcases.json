@@ -1,0 +1,794 @@
+{
+  "_source": "Syntetiska testhandlingar genererade utifrån docs/examples/ (Janus/Public 360-skärmdumpar, Ärende 2025-00001/00008/01053/01756/02220, samt 'Test Korrekt Metadata.png' och 'Test Felaktigt Skärmdump 1/2.png') och docs/Checklista för kvalitetskontroller i Janus (Public 360).DOCX.",
+  "_note": "Ingen av dessa handlingar avbildar verkliga ärenden. Namn, titlar och innehåll är påhittade men stilmässigt konsekventa med de riktiga exemplen. Fältschema (Handlingstyp, Dokumentkategori, Skyddskod, Åtkomstgrupp, ...) är hämtat från 'Test Korrekt Metadata.png'. Regel-ID:n refererar till checklist_rules.json.",
+  "cases": [
+    {
+      "case_id": "TC-01",
+      "beskrivning": "Korrekt baseline: internt beslut, allt ifyllt enligt regelverket.",
+      "arende": {
+        "diarienummer": "2026-00101",
+        "titel": "Beslut om intern kontrollplan 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om intern kontrollplan 2026",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-20",
+        "dokumentdatum": "2026-08-20",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Beslut om intern kontrollplan 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar att fastställa intern kontrollplan för 2026 enligt bilagt underlag. Planen gäller från och med den 20 augusti 2026.",
+      "expected_findings": [],
+      "expected_status": "godkänd"
+    },
+    {
+      "case_id": "TC-02",
+      "beskrivning": "Korrekt baseline: inkommande korrespondens från en annan myndighet.",
+      "arende": {
+        "diarienummer": "2026-00102",
+        "titel": "Remiss avseende förslag till ändrad myndighetsstruktur för det statliga stödet",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "Ekonomistyrningsverket"
+      },
+      "arendedokument": {
+        "titel": "Remissvar från Ekonomistyrningsverket avseende ändrad myndighetsstruktur",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Ekonomistyrningsverket",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-25",
+        "dokumentdatum": "2026-08-24",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Remissvar ESV 2026-08-24.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Ekonomistyrningsverket har inget att erinra mot förslaget till ändrad myndighetsstruktur och tillstyrker förslaget i sin helhet. Brevet är daterat 2026-08-24.",
+      "expected_findings": [],
+      "expected_status": "godkänd"
+    },
+    {
+      "case_id": "TC-03",
+      "beskrivning": "Titeln på ärendedokumentet innehåller oskrivna förkortningar.",
+      "arende": {
+        "diarienummer": "2026-00103",
+        "titel": "Beslut om intern kontrollplan 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Bslt ang IK-plan 2026 fr GD",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-20",
+        "dokumentdatum": "2026-08-20",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Bslt IK-plan 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar att fastställa intern kontrollplan för 2026 enligt bilagt underlag.",
+      "expected_findings": [
+        { "rule": "AD-TITEL-2", "beskrivning": "Titeln innehåller outskrivna förkortningar ('Bslt', 'IK-plan', 'fr', 'GD')." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-04",
+      "beskrivning": "Personnamn förekommer i ärendedokumentets titel.",
+      "arende": {
+        "diarienummer": "2026-00104",
+        "titel": "Beslut om arbetsordning 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om arbetsordning för Clas Olsson",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-07-09",
+        "dokumentdatum": "2026-07-09",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Beslut om arbetsordning.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar om arbetsordning för myndigheten enligt bilaga.",
+      "expected_findings": [
+        { "rule": "AD-TITEL-4", "beskrivning": "Titeln innehåller ett personnamn ('Clas Olsson')." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-05",
+      "beskrivning": "Titeln på ärendedokumentet är på engelska trots att en svensk motsvarighet finns.",
+      "arende": {
+        "diarienummer": "2026-00105",
+        "titel": "Beslut om intern kontrollplan 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Decision regarding internal control plan 2026",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-20",
+        "dokumentdatum": "2026-08-20",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Decision internal control plan 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar att fastställa intern kontrollplan för 2026 enligt bilagt underlag (dokumentet är skrivet på svenska).",
+      "expected_findings": [
+        { "rule": "AD-TITEL-3", "beskrivning": "Titeln är på engelska trots att dokumentet och sakinnehållet är på svenska och ingen anledning till engelsk titel finns." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-06",
+      "beskrivning": "Avsändaren är en enskild tjänstepersons namn i stället för en organisation. Rekonstruerar mönstret från Test Felaktigt Skärmdump 2.png.",
+      "arende": {
+        "diarienummer": "2026-00106",
+        "titel": "Yttrande om reviderad revisionsstrategi",
+        "process": "6.1 - Hantera revisionsstrategi",
+        "kontakt": "Rex Ljungqvist"
+      },
+      "arendedokument": {
+        "titel": "Yttrande om reviderad revisionsstrategi",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Rex Ljungqvist",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-25",
+        "dokumentdatum": "2026-08-25",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Yttrande revisionsstrategi.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Undertecknad lämnar härmed yttrande över förslaget till reviderad revisionsstrategi å myndighetens vägnar.",
+      "expected_findings": [
+        { "rule": "AD-KONTAKT-4", "beskrivning": "Avsändaren är angiven som en enskild tjänsteperson ('Rex Ljungqvist') i stället för den organisation personen företräder." },
+        { "rule": "AR-KONTAKT-4", "beskrivning": "Samma problem föreligger för ärendets kontaktfält." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-07",
+      "beskrivning": "Avsändaren är angiven som en mejladress i stället för en registrerad kontakt.",
+      "arende": {
+        "diarienummer": "2026-00107",
+        "titel": "Fråga om leverans av statistikunderlag",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "SCB"
+      },
+      "arendedokument": {
+        "titel": "Fråga om leverans av statistikunderlag",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "statistik.support@scb.se",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-12",
+        "dokumentdatum": "2026-08-12",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Fraga statistikunderlag.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Vi undrar om ni kan leverera det statistikunderlag som efterfrågades vid förra mötet.",
+      "expected_findings": [
+        { "rule": "AD-KONTAKT-3", "beskrivning": "Avsändaren är registrerad som en mejladress ('statistik.support@scb.se'), vilket inte är en giltig kontakt." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-08",
+      "beskrivning": "Fältet 'Kopia till' är inte rensat.",
+      "arende": {
+        "diarienummer": "2026-00108",
+        "titel": "Beslut om krisplan för myndigheten 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om krisplan för myndigheten 2026",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "Clas Olsson",
+        "ankomstdatum": "2026-08-18",
+        "dokumentdatum": "2026-08-18",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Beslut krisplan 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar att fastställa krisplan för myndigheten 2026.",
+      "expected_findings": [
+        { "rule": "AD-KONTAKT-5", "beskrivning": "Fältet 'Kopia till' är inte rensat (innehåller 'Clas Olsson')." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-09",
+      "beskrivning": "Avsändaren finns inte registrerad i Janus kontaktregister och behöver beställas hos registraturen.",
+      "arende": {
+        "diarienummer": "2026-00109",
+        "titel": "Samverkansinbjudan från nystartad myndighet",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "Myndigheten för digital förvaltningsutveckling"
+      },
+      "arendedokument": {
+        "titel": "Samverkansinbjudan från nystartad myndighet",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Myndigheten för digital förvaltningsutveckling",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-09-01",
+        "dokumentdatum": "2026-08-29",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Samverkansinbjudan.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Myndigheten för digital förvaltningsutveckling bjuder in till samverkan kring digitala arkiv.",
+      "expected_findings": [
+        { "rule": "AD-KONTAKT-2", "beskrivning": "Avsändarorganisationen finns (i detta exempel) inte i Janus kontaktregister sedan tidigare eftersom myndigheten är nystartad; en beställning hos registraturen behövs innan ärendedokumentet kan godkännas." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-10",
+      "beskrivning": "Registrerat datum stämmer inte med när handlingen faktiskt inkom enligt dokumentets eget innehåll.",
+      "arende": {
+        "diarienummer": "2026-00110",
+        "titel": "Svar på begäran om komplettering",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "Ekonomistyrningsverket"
+      },
+      "arendedokument": {
+        "titel": "Svar på begäran om komplettering",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Ekonomistyrningsverket",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-25",
+        "dokumentdatum": "2026-08-25",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Svar komplettering.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Brevet är daterat den 1 juli 2026 och poststämplat samma dag. Vi ber om ursäkt för sen handläggning på vår sida.",
+      "expected_findings": [
+        { "rule": "AD-DATUM-1", "beskrivning": "Registrerat ankomst-/dokumentdatum (2026-08-25) stämmer inte med det datum brevet själv anger (2026-07-01) — nästan två månaders avvikelse." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-11",
+      "beskrivning": "Handlingstypen stämmer inte med vad som faktiskt diarieförs — innehållet är ett beslut men registrerat som korrespondens.",
+      "arende": {
+        "diarienummer": "2026-00111",
+        "titel": "Beslut om delegationsordning 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om delegationsordning 2026",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-14",
+        "dokumentdatum": "2026-08-14",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Beslut delegationsordning 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar härmed om ny delegationsordning för myndigheten enligt bilaga 1.",
+      "expected_findings": [
+        { "rule": "AD-HANDLINGSTYP-1", "beskrivning": "Innehållet är ett beslut ('Generaldirektören beslutar...') men handlingstypen är registrerad som Korrespondens (2.3.1-5) i stället för Beslut." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-12",
+      "beskrivning": "Ärendedokumentet blandar två riktningar: både en inkommen förfrågan och Statskontorets utgående svar är registrerade i samma dokument.",
+      "arende": {
+        "diarienummer": "2026-00112",
+        "titel": "Förfrågan om arkivbeständighet i digitala system",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "Riksarkivet"
+      },
+      "arendedokument": {
+        "titel": "Förfrågan och svar om arkivbeständighet i digitala system",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Riksarkivet",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-05",
+        "dokumentdatum": "2026-08-10",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Fragan_och_svar_arkivbestandighet.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Sida 1: Riksarkivet frågar om vilka rutiner Statskontoret har för arkivbeständighet i digitala system (inkommet 2026-08-05). Sida 2: Statskontorets svar, undertecknat och expedierat 2026-08-10.",
+      "expected_findings": [
+        { "rule": "AD-KATEGORI-1", "beskrivning": "Dokumentet innehåller både en inkommen handling och Statskontorets utgående svar i samma ärendedokument; dessa ska diarieföras som separata ärendedokument med korrekt riktning var för sig." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-13",
+      "beskrivning": "Sekretessmarkering kvarstår trots att ärendet är avslutat och skälet för sekretess inte längre gäller.",
+      "arende": {
+        "diarienummer": "2026-00113",
+        "titel": "Upphandling av konsulttjänster inom IT-säkerhet",
+        "process": "3.1 - Genomföra upphandlingar",
+        "kontakt": null,
+        "status": "Avslutat"
+      },
+      "arendedokument": {
+        "titel": "Tilldelningsbeslut upphandling IT-säkerhetskonsulter",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Sekretess",
+        "atkomstgrupp": "Upphandlingsansvariga",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-05-02",
+        "dokumentdatum": "2026-05-02",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Tilldelningsbeslut IT-sakerhet.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Tilldelningsbeslutet vann laga kraft 2026-05-20 och avtal tecknades 2026-06-01. Upphandlingen är nu slutförd och ärendet avslutat.",
+      "expected_findings": [
+        { "rule": "AD-SEKRETESS-1", "beskrivning": "Ärendet är avslutat och upphandlingen slutförd, men skyddskoden är fortfarande satt till 'Sekretess' trots att skälet för sekretess (pågående upphandling) inte längre föreligger." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-14",
+      "beskrivning": "Ett beslutsdokument saknar godkännandeflöde/elektronisk signering trots att det ska ha hanterats enligt rutinen för elektroniskt beslutsfattande.",
+      "arende": {
+        "diarienummer": "2026-00114",
+        "titel": "Beslut om ny resepolicy 2026",
+        "process": "1.2 - Leda och styra verksamheten",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om ny resepolicy 2026",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-28",
+        "dokumentdatum": "2026-08-28",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0,
+        "godkannandeflode_status": "Saknas"
+      },
+      "fil": {
+        "filer": ["Beslut resepolicy 2026.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": false
+      },
+      "dokumenttext": "Generaldirektören beslutar om ny resepolicy enligt bilaga. (Dokumentet saknar spår av elektronisk godkännandeprocess och den bifogade filen är inte undertecknad.)",
+      "expected_findings": [
+        { "rule": "AD-GODKANNANDE-1", "beskrivning": "Beslutet saknar ett registrerat godkännandeflöde; det elektroniska beslutsfattandet har inte hanterats enligt rutin." },
+        { "rule": "FIL-UNDERTECKNAD-1", "beskrivning": "Den inskannade/bifogade filen är inte den undertecknade versionen av handlingen." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-15",
+      "beskrivning": "En zip-fil har registrerats utan att packas upp, och antalet filer stämmer inte med vad som uppges ha bifogats.",
+      "arende": {
+        "diarienummer": "2026-00115",
+        "titel": "Inkomna anbud avseende ramavtal kontorsmaterial",
+        "process": "3.1 - Genomföra upphandlingar",
+        "kontakt": "Kontorsleverantören AB"
+      },
+      "arendedokument": {
+        "titel": "Anbud från Kontorsleverantören AB avseende ramavtal kontorsmaterial",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Upphandlingsansvariga",
+        "avsandare": "Kontorsleverantören AB",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-09-01",
+        "dokumentdatum": "2026-09-01",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 3
+      },
+      "fil": {
+        "filer": ["anbud_bilagor.zip"],
+        "ar_zip": true,
+        "ar_uppackad": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Bifogat anbud enligt tre separata bilagor: prisbilaga, referenslista och produktkatalog.",
+      "expected_findings": [
+        { "rule": "FIL-ZIP-1", "beskrivning": "Zip-filen 'anbud_bilagor.zip' har inte packats upp." },
+        { "rule": "FIL-ANTAL-1", "beskrivning": "Antal bilagor anges som 3, men endast en fil (zip-arkivet) är registrerad — antalet stämmer inte överens förrän filerna packas upp och registreras var för sig." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-16",
+      "beskrivning": "Den bifogade filen går inte att öppna / är skadad.",
+      "arende": {
+        "diarienummer": "2026-00116",
+        "titel": "Inkommen rapport om systemincident",
+        "process": "4.2 - Hantera IT-incidenter",
+        "kontakt": "Leverantör X AB"
+      },
+      "arendedokument": {
+        "titel": "Incidentrapport från Leverantör X AB",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Leverantör X AB",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-30",
+        "dokumentdatum": "2026-08-30",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 1
+      },
+      "fil": {
+        "filer": ["incidentrapport.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": false,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": null,
+        "ar_undertecknad_version": null
+      },
+      "dokumenttext": "(Filen kan inte öppnas — troligen skadad vid uppladdning eller konvertering.)",
+      "expected_findings": [
+        { "rule": "FIL-LASBAR-1", "beskrivning": "Filen 'incidentrapport.pdf' går inte att öppna och bedöms som skadad." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-17",
+      "beskrivning": "Ett dubbelsidigt original har skannats in enkelsidigt, vilket gör att baksidorna saknas.",
+      "arende": {
+        "diarienummer": "2026-00117",
+        "titel": "Inkommet avtal om samverkan med kommun",
+        "process": "2.1 - Ingå och förvalta avtal",
+        "kontakt": "Exempelkommun"
+      },
+      "arendedokument": {
+        "titel": "Undertecknat samverkansavtal med Exempelkommun",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Exempelkommun",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-15",
+        "dokumentdatum": "2026-08-15",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["samverkansavtal.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": true,
+        "ar_korrekt_skannad": false,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Avtalet är tryckt dubbelsidigt (villkor på framsidan, underskrifter och datum på baksidan av sista bladet) men den inskannade filen innehåller endast framsidorna.",
+      "expected_findings": [
+        { "rule": "FIL-SKANN-1", "beskrivning": "Originalet är dubbelsidigt men har skannats in enkelsidigt — baksidor med bland annat underskrifter saknas i den registrerade filen." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-18",
+      "beskrivning": "Ett mejlmissiv har inte diarieförts separat, endast den bifogade filen registrerades.",
+      "arende": {
+        "diarienummer": "2026-00118",
+        "titel": "Inkommen ansökan om statsbidrag",
+        "process": "2.3 - Handlägga remisser",
+        "kontakt": "Exempelorganisationen"
+      },
+      "arendedokument": {
+        "titel": "Ansökan om statsbidrag från Exempelorganisationen",
+        "handlingstyp": "2.3.1-5 (Korrespondens)",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Allmän handling - Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Exempelorganisationen",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-22",
+        "dokumentdatum": "2026-08-22",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 1
+      },
+      "fil": {
+        "filer": ["ansokan_statsbidrag.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true,
+        "mejlmissiv_diarieford": false
+      },
+      "dokumenttext": "Ansökan inkom som bifogad fil till ett mejl med ett kort följebrev ('Bifogat finner ni vår ansökan om statsbidrag för 2026, se bilaga.'). Endast den bifogade ansökan registrerades — mejltexten registrerades inte som eget dokument.",
+      "expected_findings": [
+        { "rule": "FIL-MISSIV-1", "beskrivning": "Mejlmissivet (följebrevet i mejlet) har inte diarieförts som ett eget dokument." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-19",
+      "beskrivning": "Vald process stämmer inte med vad ärendet faktiskt rör.",
+      "arende": {
+        "diarienummer": "2026-00119",
+        "titel": "Rekrytering av ny enhetschef för HR",
+        "process": "6.1 - Hantera revisionsstrategi",
+        "kontakt": null
+      },
+      "arendedokument": {
+        "titel": "Beslut om anställning av enhetschef HR",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Internt",
+        "skyddskod": "Sekretess",
+        "atkomstgrupp": "HR-ansvariga",
+        "avsandare": "Statskontoret",
+        "mottagare": null,
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-19",
+        "dokumentdatum": "2026-08-19",
+        "sista_svarsdatum": "",
+        "ansvarig": "Rex Ljungqvist - Stöd - HR",
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Beslut anstallning enhetschef HR.pdf"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": true
+      },
+      "dokumenttext": "Generaldirektören beslutar att anställa NN som enhetschef för HR-enheten från och med 2026-10-01.",
+      "expected_findings": [
+        { "rule": "AR-PROCESS-1", "beskrivning": "Ärendet rör en HR-rekrytering men har fått processen '6.1 - Hantera revisionsstrategi', vilket inte stämmer med Statskontorets klassificeringsstruktur för personalärenden." }
+      ],
+      "expected_status": "flaggad"
+    },
+    {
+      "case_id": "TC-20",
+      "beskrivning": "Flerfelsscenario som rekonstruerar det verkliga annoterade exemplet i 'Test Felaktigt Skärmdump 1.png' / 'Test Felaktigt Skärmdump 2.png': otydlig/förkortad titel, avsändare angiven som enskild tjänsteperson, samt felaktig handlingstyp/process.",
+      "arende": {
+        "diarienummer": "2026-00066",
+        "titel": "Test Felaktigt UTY GGG BBO",
+        "process": "6.1 - Hantera revisionsstrategi",
+        "kontakt": "Rex Ljungqvist"
+      },
+      "arendedokument": {
+        "titel": "UUY HHT BB",
+        "handlingstyp": "6.1-1 - Beslut",
+        "dokumentkategori": "Inkommande",
+        "skyddskod": "Offentlig",
+        "atkomstgrupp": "Alla",
+        "avsandare": "Rex Ljungqvist",
+        "mottagare": "Statskontoret",
+        "kopia_till": "",
+        "ankomstdatum": "2026-08-25",
+        "dokumentdatum": "2026-08-25",
+        "sista_svarsdatum": "",
+        "ansvarig": null,
+        "status": "Registrerat",
+        "antal_bilagor": 0
+      },
+      "fil": {
+        "filer": ["Test"],
+        "ar_zip": false,
+        "ar_lasbar": true,
+        "ar_dubbelsidig_original": false,
+        "ar_korrekt_skannad": true,
+        "ar_undertecknad_version": null
+      },
+      "dokumenttext": "(Testfil utan meningsfullt innehåll — används enbart för att verifiera metadatakontroller.)",
+      "expected_findings": [
+        { "rule": "AR-TITEL-2", "beskrivning": "Ärendets titel innehåller outskrivna förkortningar ('UTY GGG BBO')." },
+        { "rule": "AD-TITEL-1", "beskrivning": "Ärendedokumentets titel ('UUY HHT BB') beskriver inte vad handlingen rör." },
+        { "rule": "AD-TITEL-2", "beskrivning": "Ärendedokumentets titel innehåller outskrivna förkortningar." },
+        { "rule": "AD-KONTAKT-4", "beskrivning": "Avsändaren är angiven som en enskild tjänsteperson ('Rex Ljungqvist') i stället för en organisation." },
+        { "rule": "AD-HANDLINGSTYP-1", "beskrivning": "Handlingstypen 'Beslut' stämmer sannolikt inte med en inkommen testhandling utan meningsfullt innehåll." },
+        { "rule": "AR-PROCESS-1", "beskrivning": "Processen '6.1 - Hantera revisionsstrategi' stämmer inte tydligt överens med ärendets (otydliga) innehåll." }
+      ],
+      "expected_status": "flaggad"
+    }
+  ]
+}
