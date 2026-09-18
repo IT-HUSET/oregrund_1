@@ -34,32 +34,32 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01,TI02,TI03,TI04,TI05,TI06,TI07] Document covers every FR11 point with concrete content**
+- [x] **S01 [OC01] [TI01,TI02,TI03,TI04,TI05,TI06,TI07] Document covers every FR11 point with concrete content**
   - **Given** `docs/integrationsplan.md` as produced by this story
   - **When** checked against FR11's nine required points
   - **Then** each point has a named section with concrete, case-specific content — no section is a placeholder or a restatement of the FR11 bullet text alone
 
-- [ ] **S02 [OC02] [TI02] Manual-steps delta is explicit**
+- [x] **S02 [OC02] [TI02] Manual-steps delta is explicit**
   - **Given** today's flow (handläggaren sets "Diarieförd av handläggare" / "Färdig från handläggare/chef"; huvudregistratorn reviews every card in "Dokument redo för registrering") and the prototype's automatic review
   - **When** the document's manual-steps section is read
   - **Then** it names which steps disappear (huvudregistratorns manual review of Godkänd/Autokorrigerad cards) and which remain (handläggarens rättning of Åtgärd krävs, registratorns bedömning of Mänsklig bedömning, sekretessbedömning always going to a human per `docs/prd.md#constraints`)
 
-- [ ] **S03 [OC03] [TI05] P360 requirements and open questions are named, including kontrollogg retention**
+- [x] **S03 [OC03] [TI05] P360 requirements and open questions are named, including kontrollogg retention**
   - **Given** no P360/Janus API documentation exists in the source material (`docs/prd.md#dependencies`) and `docs/adr.md#beslut-3-oföränderlig-kontrollogg-append-only` defers log retention/arkivering to this plan
   - **When** the document's P360-requirements section is read
   - **Then** it names what must exist in P360 (gränssnitt eller API) to receive the trigger and write back a status, and lists open questions explicitly as unresolved — including kontrollogg-retention/arkivering — rather than assuming an answer
 
-- [ ] **S04 [OC04] [TI01,TI04] Document never contradicts the autonomy constraint**
+- [x] **S04 [OC04] [TI01,TI04] Document never contradicts the autonomy constraint**
   - **Given** the binding constraint "Datum, diarienummer och skyddskod ändras aldrig automatiskt."
   - **When** the document's status-mapping and dataflöde/datahantering sections are read
   - **Then** no described P360 write path auto-changes datum, diarienummer or skyddskod; automatic "Registrerat" is described only for Godkänd/Autokorrigerad or an explicit human decision, per `docs/prd.md#fr4-statussättning`
 
-- [ ] **S05 [OC01] [TI07] Pilot path never overstates step-3 readiness**
+- [x] **S05 [OC01] [TI07] Pilot path never overstates step-3 readiness**
   - **Given** the prototype covers only granskning (steg 1) and rättning (steg 2), with live P360-integration and AI-driven registrering excluded from this prototype's scope
   - **When** the document's steg 1→3 pilotväg section is read
   - **Then** step 3 (AI registrerar) is described as a future step gated on the open production data-handling decision and P360 write-back questions (TI04/TI05), not as ready today
 
-- [ ] **S06 [OC01] [TI04] Data handling names the AI-service requirement for real, classified documents**
+- [x] **S06 [OC01] [TI04] Data handling names the AI-service requirement for real, classified documents**
   - **Given** the assumption "eftersom prototypen bara hanterar syntetiska data får en moln-LLM användas utan krav på var data lagras. Produktion kräver ett nytt beslut om databehandling." (`docs/prd.md#assumptions`)
   - **When** the document's dataflöde/datahantering section is read
   - **Then** it states that real/classified handlingar require a new, explicit AI-service data-handling decision (e.g. data residency, EU-hosted or on-prem model) before production use, distinct from the prototype's cloud-LLM assumption
@@ -67,9 +67,9 @@
 
 ## Structural Criteria
 
-- [ ] `docs/integrationsplan.md` parses as valid Markdown with all nine FR11-point section headings present — no broken structure or unresolved template placeholders.
-- [ ] No code, config, or data files are added or modified by this story — the deliverable is a document only, per `docs/plan.json`'s S10 notes ("No code dependency").
-- [ ] No status, rule, or auto-correction field is described beyond what S01-S09 already establish in `docs/plan.json` — this document reflects the pipeline's finished behavior, it does not redesign it.
+- [x] `docs/integrationsplan.md` parses as valid Markdown with all nine FR11-point section headings present — no broken structure or unresolved template placeholders.
+- [x] No code, config, or data files are added or modified by this story — the deliverable is a document only, per `docs/plan.json`'s S10 notes ("No code dependency").
+- [x] No status, rule, or auto-correction field is described beyond what S01-S09 already establish in `docs/plan.json` — this document reflects the pipeline's finished behavior, it does not redesign it.
 
 
 ## Scope & Boundaries
@@ -118,39 +118,45 @@ file | docs/adr.md#beslut-3-oföränderlig-kontrollogg-append-only | Kontrollogg
 
 ### Implementation Tasks
 
-- [ ] **TI01** Document names trigger points and maps the four review statuses to P360
+- [x] **TI01** Document names trigger points and maps the four review statuses to P360
   - Cover the trigger at "Diarieförd av handläggare" / "Färdig från handläggare/chef" (`docs/prd.md#evidence--context`) and map Godkänd/Autokorrigerad/Åtgärd krävs/Mänsklig bedömning to corresponding P360 statuses, keeping automatic "Registrerat" limited to Godkänd/Autokorrigerad or an explicit human decision per `docs/prd.md#fr4-statussättning`
   - **Verify**: document section names both trigger points and a status-mapping table covering all four statuses, with no automatic write path touching datum/diarienummer/skyddskod
 
-- [ ] **TI02** Document states handläggare feedback and enumerates the manual-steps delta
+- [x] **TI02** Document states handläggare feedback and enumerates the manual-steps delta
   - Cover in-app-only feedback (no e-post, per `docs/prd.md#out-of-scope`) and explicitly list which of huvudregistratorns current manual-review steps disappear versus remain (registratorns bedömning for Mänsklig bedömning, handläggarens rättning for Åtgärd krävs, sekretessbedömning always to a human)
   - **Verify**: document names the feedback mechanism and lists disappearing vs. remaining manual steps per FR11's Acceptance Criteria bullet on manual steps
 
-- [ ] **TI03** Document describes the registrator's workspace built on the existing registratorvy
+- [x] **TI03** Document describes the registrator's workspace built on the existing registratorvy
   - Point to the registrator queue/detail-view/actions already scoped for FR8 (`docs/prd.md#fr8-registratorvy`) as the "registratorns arbetsyta" FR11 requires, without describing new UI
   - **Verify**: document's registratorns-arbetsyta section references the existing queue/detail-view/actions rather than proposing new UI
 
-- [ ] **TI04** Document covers dataflöde/datahantering including the AI-service requirement for classified documents
+- [x] **TI04** Document covers dataflöde/datahantering including the AI-service requirement for classified documents
   - State the prototype's cloud-LLM-for-syntetisk-data-only assumption (`docs/prd.md#assumptions`) and name that production use on real, classified handlingar requires a new, separate data-handling decision (e.g. data residency) before any AI-tjänst call
   - **Verify**: document's data-handling section distinguishes the prototype's synthetic-data assumption from the open production decision for classified documents, and does not describe an automatic change to datum/diarienummer/skyddskod
 
-- [ ] **TI05** Document names P360 requirements and lists open questions, including kontrollogg retention
+- [x] **TI05** Document names P360 requirements and lists open questions, including kontrollogg retention
   - Name what must exist in P360 (gränssnitt eller API) to receive the trigger and write back status, since no API documentation exists in the source material (`docs/prd.md#dependencies`); include kontrollogg-retention/arkivering as an explicit open question per `docs/adr.md#beslut-3-oföränderlig-kontrollogg-append-only`
   - **Verify**: document lists concrete P360 UI/API requirements and a separate, explicit list of open questions that includes kontrollogg-retention
 
-- [ ] **TI06** Document covers behörigheter, driftsättning and KPI measurement
+- [x] **TI06** Document covers behörigheter, driftsättning and KPI measurement
   - Behörigheter: note the prototype has no login/role enforcement today (`docs/prd.md#out-of-scope`) and state what production behörigheter would require; driftsättning: outline the rollout; mätning: tie each business-case KPI (100 % granskning, ~5 % kräver mänsklig rättning, ledtid mot 0, per `docs/prd.md#evidence--context`) to a measurable signal sourced from S02's kontrollogg / S12's kvalitetsöversikt (`docs/prd.md#fr13-kvalitetsöversikt`)
   - **Verify**: document names behörigheter, a driftsättning outline, and each KPI's measurement source
 
-- [ ] **TI07** Document lays out the steg 1→3 pilot path without overstating step-3 readiness
+- [x] **TI07** Document lays out the steg 1→3 pilot path without overstating step-3 readiness
   - Describe steg 1 (granskning) and steg 2 (rättning) as achievable on the S01-S09 pipeline; describe steg 3 (AI registrerar) explicitly as a future step gated on the open production data-handling decision (TI04) and the open P360 write-back questions (TI05)
   - **Verify**: document's pilotväg section marks steg 3 as gated/future rather than implemented today
 
-- [ ] **TI08** Document stays document-only and scoped to already-established pipeline behavior
+- [x] **TI08** Document stays document-only and scoped to already-established pipeline behavior
   - No code, config, or data files are added or modified by this story; every status, rule, or auto-correction reference in the document points to behavior an S01-S09 story already establishes in `docs/plan.json` rather than inventing new pipeline behavior
   - **Verify**: only `docs/integrationsplan.md` is added by this story; the file parses as valid Markdown with all nine FR11-point section headings present; no status/rule/field described is absent from S01-S09's scope
 
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Deliverable: `docs/integrationsplan.md`. No code, config or data files touched.
+- The document has eleven sections, not nine: FR11's nine points plus two sections the Acceptance Criteria require as standalone content – the manual-steps delta (section 4) and the P360 requirements/open-questions tables (section 5). Folding those into other sections would have buried them.
+- Concrete P360 vocabulary (statuses "Diarieförd av handläggare" / "Färdig från handläggare/chef" / "Registrerat" / "Makulerad" / "Avslutat", the view "Dokument redo för registrering", the role "Huvudregistrator") comes from `casedetails/Instruktionshandbok registraturen.DOCX`, section "Kvalitetsgranska ärenden". The PRD paraphrases it; the handbook has the exact terms.
+- KPI figures in section 10 come from the PRD's Evidence & Context, cross-checked against `casedetails/Business case ESV_Registratur_251117_a (1).docx` (sections 6.2/6.3). The business case's step-3 framing is "dokumentkort skapas automatiskt utifrån filer"; the document follows the PRD's out-of-scope wording rather than the business case's.
+- Two measurements were added that the business case lacks: false findings (rejected with motivering, FR8) and missed errors (stickprov, FR12). Both are already in the kontrollogg, so they cost nothing to collect, and without them a pilot cannot tell whether auto-registrering is safe.
+- Requirements are numbered P1–P7 and open questions Ö1–Ö10 so later stories and meeting notes can reference them without quoting prose.
+- The P360 write path is described as "log first, then write". The reverse order of ADR Beslut 3 would leave a document registered in P360 with no log entry, which is exactly the failure FR7 exists to prevent. A failed P360 write after a successful log write is itself a logged event, with the document left in its previous status.

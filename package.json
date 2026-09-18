@@ -7,8 +7,8 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "test": "node --test \"src/**/*.test.ts\"",
-    "test:watch": "node --test --watch \"src/**/*.test.ts\"",
+    "test": "node --test \"src/**/*.test.ts\" \"test/**/*.test.js\"",
+    "test:watch": "node --test --watch \"src/**/*.test.ts\" \"test/**/*.test.js\"",
     "typecheck": "tsc --noEmit"
   }
 }
