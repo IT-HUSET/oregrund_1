@@ -28,7 +28,13 @@ import { skapaDeterministiskMotor, type DeterministiskMotor } from '../motor.ts'
 import type { Referensdata } from '../regler.ts';
 import { allaFynd, slaSammanUtfall, type SammanslagetUtfall } from './sammanslagning.ts';
 import { forberedRattning, rattningsfel, type Filkalla, type Rattning } from './rattning.ts';
-import { bestamStatus, satterRegistrerat, REGISTRERAD, type Granskningsstatus } from './status.ts';
+import {
+  bestamStatus,
+  satterRegistrerat,
+  REGISTRERAD,
+  type AvgjortFynd,
+  type Granskningsstatus,
+} from './status.ts';
 
 export interface ManskligtBeslut {
   roll: string;
@@ -47,6 +53,8 @@ export interface GranskningsomgangIndata {
   /** Var filer ligger på disk. Utan den kan en zip inte packas upp. */
   filkalla?: Filkalla;
   manskligtBeslut?: ManskligtBeslut;
+  /** Registratorns beslut om fynd (S07). Avvisade fynd rättas inte och räknas inte i statusen. */
+  avgjorda?: AvgjortFynd[];
   /** Injicerbar klocka, så att tester får deterministiska tidpunkter. */
   nu?: () => Date;
 }
@@ -63,6 +71,8 @@ export interface Granskningsomgang {
   degraderadeRattningar: { regelId: string; meddelande: string }[];
   /** Fel som anroparen ska visa, t.ex. en misslyckad loggskrivning. */
   fel: string[];
+  /** Omgångens egen loggpost skrevs. Om inte är status och fyndlista inte att lita på som ny (FR8). */
+  omgangLoggad: boolean;
 }
 
 function dokumentIdFor(dokument: GranskatDokument): string {
@@ -177,10 +187,16 @@ export async function korGranskningsomgang(
   const tillampadeRattningar: Rattning[] = [];
   const degraderadeRattningar: { regelId: string; meddelande: string }[] = [];
   const fel: string[] = [];
+  const avgjorda = indata.avgjorda ?? [];
+  const avvisadeRegelIdn = new Set(
+    avgjorda.filter((beslut) => beslut.utgang === 'avvisat').map((beslut) => beslut.regelId),
+  );
 
   // TI03/TI04: bara allowlistade regel-ID:n, var och en bakom loggrinden.
   for (const rad of utfall) {
     if (rad.utfall !== 'fynd') continue;
+    // En registrator som avvisat fyndet har sagt att det är fel: då rättas ingenting.
+    if (avvisadeRegelIdn.has(rad.regelId)) continue;
     const forsok = forberedRattning(rad.regelId, dokument, indata.filkalla);
     if (!forsok.ok) {
       if (rad.regelId === 'AD-KONTAKT-5' || rad.regelId === 'FIL-ZIP-1') {
@@ -232,6 +248,7 @@ export async function korGranskningsomgang(
     katalog,
     antalTillampadeRattningar: tillampadeRattningar.length,
     degraderadeRegelIdn: degraderadeRattningar.map((rad) => rad.regelId),
+    avgjorda,
   });
 
   // TI07: Registrerat sätts av Godkänd/Autokorrigerad eller av ett uttryckligt
@@ -289,5 +306,6 @@ export async function korGranskningsomgang(
     tillampadeRattningar,
     degraderadeRattningar,
     fel,
+    omgangLoggad: skrivning.ok,
   };
 }

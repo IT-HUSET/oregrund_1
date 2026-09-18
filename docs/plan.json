@@ -291,7 +291,7 @@
       ],
       "parallel": true,
       "risk": "medium",
-      "status": "spec-ready",
+      "status": "done",
       "fis": "s07-registratorvy.md",
       "owner": null,
       "scope": "Give the registrator a working Mänsklig-bedömning queue. Includes: a status-filterable queue defaulting to Mänsklig bedömning, a document detail view (Detaljer/Kontakter/Filer, findings, log) built on S04-S06 output, per-finding approve/reject/send-to-handläggare actions, a required rejection motivation, and a header role selector with no login. Excludes: the handläggare flow (S08), stickprov (S11), kvalitetsöversikt (S12).",

@@ -162,4 +162,10 @@ file   | docs/adr.md#skiss                             | Next.js fullstack-form,
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/app/registrator/` (kö, detaljvy, `Beslutsformular`), `src/app/api/dokument/[id]/beslut/route.ts`, `src/lib/registrator.ts` (beslut, server-validerat), `src/lib/registrator-vy.ts`, `src/lib/dokumentlager.ts` (nytt filbaserat lager, `data/dokument.json`), `src/lib/granskningstjanst.ts` (`granskaOchSpara`), `scripts/seed.ts`.
+- S06 utökades: `korGranskningsomgang` tar `avgjorda` (avvisat/godkant/skickat per regel-ID) och returnerar `omgangLoggad`. Ett avvisat fynd rättas inte och räknas inte; ett skickat fynd ger Åtgärd krävs före FR4:s ordning; ett beslut om en regel räknas som dess mänskliga bedömning, även när motorn markerat regeln "ej genomförd" (AD-SEKRETESS-1: S04 ger fyndet, S05 lämnar H-steget till människa).
+- Beslutet loggas i en egen post före omgången (S07 S04: beslut före rättning). Misslyckas omgångens loggpost sparas bara dokumentets redan loggade rättningar, inte status eller fynd.
+- `Godkänn förslag` på en regel utan auto-rättning bekräftar fyndet och ger Åtgärd krävs; registratorn rättar aldrig data själv (FR5).
+- Lagrets `beslut` gäller senaste omgången. S08:s "Skicka för ny granskning" ska nollställa det (den anropar omgången utan `avgjorda`).
+- Regler som är "ej genomförd" utan fynd (AI nere) har inget fynd att avgöra, så ett sådant dokument kan inte lämna Mänsklig bedömning från registratorvyn.
+- Utan `ANTHROPIC_API_KEY` degraderar alla AI-regler; alla 20 testfall hamnar då i Mänsklig bedömning.
