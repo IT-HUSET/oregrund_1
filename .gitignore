@@ -5,3 +5,10 @@ docs/STATE.local.md
 node_modules/
 dist/
 .next/
+
+# Runtime data (seed / app)
+data/dokument.json
+data/dokument.json.tmp
+data/kontrollogg.jsonl
+next-env.d.ts
+*.tsbuildinfo

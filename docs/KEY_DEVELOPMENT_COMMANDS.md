@@ -1,23 +1,22 @@
 # Key Development Commands
 
-> Partially scaffolded: the shared library under `src/lib/` exists (S02). The Next.js app does not exist yet – fill in the app rows once the first UI story lands (see `docs/STACK.md`, `docs/adr.md`).
->
-> Requires Node >= 22.18. There are no dependencies to install: TypeScript sources run directly under Node's type stripping.
+> Requires Node >= 22.18. Run `npm install` once (Next.js, React, TypeScript). Library code under `src/lib/` runs directly under Node's type stripping; the Next.js app lives in `src/app/`.
 
 ## Running the Application
 
 | Command | Description |
 |---------|-------------|
-| `TODO`  | Start development server |
+| `npm run seed` | Ingest and review the 20 `testcases.json` cases into `data/dokument.json` + `data/kontrollogg.jsonl` (resets both; without `ANTHROPIC_API_KEY` all AI rules degrade to "ej genomförd", so every case lands in Mänsklig bedömning) |
+| `npm run dev` | Start development server |
 
-Application URL: `TODO`
+Application URL: `http://localhost:3000` (registratorvy at `/registrator`)
 
 ## Code Quality (Formatting, Linting, Type Checking)
 
 | Command | Description |
 |---------|-------------|
 | `TODO`  | Format code |
-| `npm run typecheck` | Type-check (`tsc --noEmit`; needs `typescript` and `@types/node` from an npm registry, which this environment's egress policy blocks) |
+| `npm run typecheck` | Type-check (`tsc --noEmit`) |
 
 ## Testing
 
@@ -30,7 +29,7 @@ Application URL: `TODO`
 
 | Command | Description |
 |---------|-------------|
-| `TODO`  | Production build |
+| `npm run build` | Production build (`npm start` serves it) |
 | `TODO`  | Deploy |
 
 ## Visual Validation
