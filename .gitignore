@@ -1,2 +1,4 @@
 .claude/
 .idea
+docs/STATE.local.md
+.agent_temp/
