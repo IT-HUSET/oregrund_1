@@ -40,32 +40,32 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01,TI06,TI08] Sekretessfynd via H-regel ger alltid Mänsklig bedömning (TC-13)**
+- [x] **S01 [OC01] [TI01,TI06,TI08] Sekretessfynd via H-regel ger alltid Mänsklig bedömning (TC-13)**
   - **Given** TC-13-fixturen (`ärende.status="Avslutat"`, `skyddskod="Sekretess"`, S04:s AD-SEKRETESS-1-fynd via M→H)
   - **When** granskningsomgångens entry point körs för dokumentet
   - **Then** slutstatusen är Mänsklig bedömning per FR4:s Acceptance Criteria, och `skyddskod` är oförändrad
 
-- [ ] **S02 [OC01,OC02,OC03] [TI03,TI05,TI06,TI07] Kopia-till-fynd auto-rättas till Autokorrigerad och Registrerat (TC-08)**
+- [x] **S02 [OC01,OC02,OC03] [TI03,TI05,TI06,TI07] Kopia-till-fynd auto-rättas till Autokorrigerad och Registrerat (TC-08)**
   - **Given** TC-08-fixturen med `kopia_till: "Clas Olsson"` (S04:s AD-KONTAKT-5-fynd)
   - **When** granskningsomgången körs
   - **Then** AD-KONTAKT-5 rättas automatiskt (`kopia_till` blir tomt, loggen visar före/efter), en omkörning sker, slutstatusen blir Autokorrigerad, och `dokumentstatus` sätts till "Registrerat"
 
-- [ ] **S03 [OC01,OC03] [TI03,TI05,TI06] Zip-rättning löser inte hela avvikelsen – Åtgärd krävs kvarstår (TC-15)**
+- [x] **S03 [OC01,OC03] [TI03,TI05,TI06] Zip-rättning löser inte hela avvikelsen – Åtgärd krävs kvarstår (TC-15)**
   - **Given** TC-15-fixturen (`ar_zip=true`, `ar_uppackad=false`, `antal_bilagor=3`, en registrerad fil)
   - **When** granskningsomgången körs
   - **Then** FIL-ZIP-1 rättas automatiskt (zip-filen packas upp), en omkörning av FIL-ANTAL-1 sker mot det uppackade innehållet, avvikelsen kvarstår, och slutstatusen blir Åtgärd krävs, inte Autokorrigerad
 
-- [ ] **S04 [OC01] [TI01] Ett regel-ID med utfall från båda motorerna slås samman utan att tappa fyndet**
+- [x] **S04 [OC01] [TI01] Ett regel-ID med utfall från båda motorerna slås samman utan att tappa fyndet**
   - **Given** en syntetisk fixtur där AD-KONTAKT-1:s metadata-del (S04) returnerar "uppfylld" (avsändaren finns i kontaktregistret) men dess innehållsdel (S05) returnerar "fynd" för samma regel-ID (dokumenttexten indikerar fel mottagare)
   - **When** TI01:s sammanslagningslager kombinerar de två motorernas utfall för AD-KONTAKT-1
   - **Then** det sammanslagna utfallet är "fynd" (worst-outcome-wins), och S05:s fynd redovisas oförkortat i granskningsomgångens resultat i stället för att S04:s uppfyllda delutfall tyst vinner
 
-- [ ] **S05 [OC04] [TI02,TI04,TI06] Misslyckad loggskrivning avbryter rättningen och degraderar till Åtgärd krävs**
+- [x] **S05 [OC04] [TI02,TI04,TI06] Misslyckad loggskrivning avbryter rättningen och degraderar till Åtgärd krävs**
   - **Given** TC-08-fixturen och en loggskrivning som tvingas misslyckas under AD-KONTAKT-5-rättningens append-anrop
   - **When** granskningsomgången försöker applicera rättningen
   - **Then** `kopia_till` är fortfarande "Clas Olsson" efteråt, fyndet blir ett förslag med felmeddelandet "Automatisk rättning av Kopia till misslyckades", och slutstatusen blir Åtgärd krävs, inte Autokorrigerad
 
-- [ ] **S06 [OC02] [TI03] Datum, diarienummer och skyddskod muteras aldrig, även vid en felkonfigurerad katalogflagga**
+- [x] **S06 [OC02] [TI03] Datum, diarienummer och skyddskod muteras aldrig, även vid en felkonfigurerad katalogflagga**
   - **Given** en testkatalogfixtur där regel-ID AD-DATUM-1 av misstag bär auto-rättningsflagga="Ja"
   - **When** granskningsomgången utvärderar auto-rättningskandidater mot fyndet för AD-DATUM-1
   - **Then** ingen rättning appliceras för AD-DATUM-1 och `dokumentdatum` ändras inte – bara AD-KONTAKT-5 och FIL-ZIP-1 finns i TI03:s hårdkodade allowlist, oavsett katalogens auto-rättningsflagga
@@ -73,10 +73,10 @@
 
 ## Structural Criteria
 
-- [ ] Sammanslagnings-, status- och rättningslogiken (TI01, TI06, TI03) är rena funktioner över RuleOutcome[]-indata; ingen väg i den här modulen anropar S04:s eller S05:s handlers direkt utanför det delade RuleOutcome-kontraktet.
-- [ ] TI08:s entry point är den enda platsen S07/S08/S09 utlöser en granskningsomgång från – ingen duplicerad orkestreringslogik finns någon annanstans i den här storyns kod.
-- [ ] Inget skrivfall i den här modulen refererar `ankomstdatum`, `dokumentdatum`, `diarienummer` eller `skyddskod` som mål för en tilldelning.
-- [ ] Varje status- eller datamutationsväg (TI03, TI07) är bevisligen grindad på ett lyckat TI02-loggskrivningsanrop innan den tar effekt.
+- [x] Sammanslagnings-, status- och rättningslogiken (TI01, TI06, TI03) är rena funktioner över RuleOutcome[]-indata; ingen väg i den här modulen anropar S04:s eller S05:s handlers direkt utanför det delade RuleOutcome-kontraktet.
+- [x] TI08:s entry point är den enda platsen S07/S08/S09 utlöser en granskningsomgång från – ingen duplicerad orkestreringslogik finns någon annanstans i den här storyns kod.
+- [x] Inget skrivfall i den här modulen refererar `ankomstdatum`, `dokumentdatum`, `diarienummer` eller `skyddskod` som mål för en tilldelning.
+- [x] Varje status- eller datamutationsväg (TI03, TI07) är bevisligen grindad på ett lyckat TI02-loggskrivningsanrop innan den tar effekt.
 
 
 ## Scope & Boundaries
@@ -129,35 +129,35 @@ file   | docs/s02-kontrollogg-infrastruktur.md            | S02:s append/läs-AP
 
 ### Implementation Tasks
 
-- [ ] **TI01** Sammanslagningslagret kombinerar S04:s och S05:s per-regel-ID-utfall till ett beslut per regel, tolerant mot att båda motorerna bidrar
+- [x] **TI01** Sammanslagningslagret kombinerar S04:s och S05:s per-regel-ID-utfall till ett beslut per regel, tolerant mot att båda motorerna bidrar
   - Konsumerar de delade RuleOutcome[]/Finding[]-arrayer S04 och S05 var för sig returnerar (`docs/plan.json#sharedDecisions.0`); grupperar per regel-ID och reducerar med worst-outcome-wins (ej genomförd > H-regel/osäkert AI-fynd > fynd > ej tillämplig > uppfylld), och behåller varje fynd från varje bidragande motor i stället för att anta exakt ett utfall per regel-ID (se Constraints & Gotchas: S04:s/S05:s motstridiga FIL-LASBAR-1-anspråk)
   - **Verify**: TC-01:s fixtur slås samman till 29 "uppfylld"-utfall utan fynd; en syntetisk fixtur där ena motorn returnerar "uppfylld" och andra "fynd" för samma regel-ID slås samman till "fynd" och behåller det flaggande fyndet intakt
 
-- [ ] **TI02** En loggskrivningsgrind omsluter ett mutationsförsök och avbryter det vid ett misslyckat append
+- [x] **TI02** En loggskrivningsgrind omsluter ett mutationsförsök och avbryter det vid ett misslyckat append
   - Anropar S02:s append-API (`docs/s02-kontrollogg-infrastruktur.md`) synkront omedelbart innan en status- eller dataändring tar effekt; vid ett misslyckat append tillämpas den omslutna ändringen inte, och grinden ytar en tydlig felsignal anroparen kan agera på (FR7 felhantering, ADR Beslut 3). Varje senare mutationstask (TI03, TI07) byggs på den här grinden, inte en egen skrivväg
   - **Verify**: ett tvingat append-fel genom grinden lämnar den omslutna mutationen otillämpad och returnerar en felsignal; ett lyckat append låter den omslutna mutationen genomföras och båda syns vid en loggläsning
 
-- [ ] **TI03** Auto-rättningsexekveraren applicerar exakt AD-KONTAKT-5 och FIL-ZIP-1, aldrig datum/diarienummer/skyddskod
+- [x] **TI03** Auto-rättningsexekveraren applicerar exakt AD-KONTAKT-5 och FIL-ZIP-1, aldrig datum/diarienummer/skyddskod
   - För ett sammanslaget fynd (TI01) på regel-ID AD-KONTAKT-5 rensas `kopia_till`; för FIL-ZIP-1 packas zip-filen upp och ersätts av sitt innehåll; båda går genom TI02:s loggskrivningsgrind med registrerade före/efter-värden. Använder en hårdkodad tvåregel-allowlist i stället för att bara lita på katalogens auto-rättningsflagga, så en felkonfigurerad katalog inte kan bredda mutationsytan (Constraints bindingConstraint)
   - **Verify**: TC-08:s `kopia_till` blir "" med en före/efter-loggpost; TC-15:s zip-fil ersätts av sitt uppackade innehåll; en fixtur med ett icke-allowlistat regel-ID som bär `auto-rättning: true` i en felformad katalog ger ingen mutation för det regel-ID:t
 
-- [ ] **TI04** Ett misslyckat rättningsförsök degraderas till ett förslag som bär FR5:s felmeddelande
+- [x] **TI04** Ett misslyckat rättningsförsök degraderas till ett förslag som bär FR5:s felmeddelande
   - När TI02:s grind rapporterar fel för en TI03-rättning (eller rättningens eget förvillkor fallerar, t.ex. en nästlad eller lösenordsskyddad zip), taggas fyndet om till ett förslag med "Automatisk rättning av X misslyckades" i stället för en applicerad rättning, och räknas som ett kvarstående fel för TI06:s statusberäkning (inte en applicerad Autokorrigerad)
   - **Verify**: ett simulerat append-fel under TC-08:s AD-KONTAKT-5-rättning lämnar `kopia_till` oförändrat och ger ett förslagsfynd med FR5:s felmeddelande
 
-- [ ] **TI05** En enda omkörning omprövar regler som påverkas av en applicerad rättning, utan att auto-rätta omkörningens fynd på nytt
+- [x] **TI05** En enda omkörning omprövar regler som påverkas av en applicerad rättning, utan att auto-rätta omkörningens fynd på nytt
   - Efter att ≥1 TI03-rättning lyckats återanropas de berörda S04-/S05-handlerna exakt en gång mot det rättade dokumentet (t.ex. FIL-ANTAL-1 efter FIL-ZIP-1:s uppackning), och omkörningens utfall matas tillbaka genom TI01:s sammanslagning; TI03 körs inte igen i samma omgång för omkörningens fynd (FR5: "Fynd i omkörningen auto-rättas inte på nytt"). En omgång utan applicerad rättning utlöser aldrig den här omkörningen
   - **Verify**: TC-15:s omkörning omprövar FIL-ANTAL-1 mot det uppackade filantalet och ger fortfarande en avvikelse utan ett andra rättningsförsök; TC-08:s omkörning (bara AD-KONTAKT-5 berörs, ingen beroende regel) slutförs utan att ändra något annat regel-ID:s utfall
 
-- [ ] **TI06** Fyrstatuslogiken löser exakt en status per granskningsomgång
+- [x] **TI06** Fyrstatuslogiken löser exakt en status per granskningsomgång
   - Tillämpar FR4:s ordning över TI01:s/TI05:s slutliga sammanslagna utfall: Mänsklig bedömning (ett H-regel-fynd, ett osäkert AI-fynd eller ett ej genomförd-utfall finns) > Åtgärd krävs (en TI04-nedgradering eller ett olöst fynd kvarstår) > Autokorrigerad (≥1 TI03-rättning applicerad, inget olöst kvarstår) > Godkänd
   - **Verify**: TC-13 löser till Mänsklig bedömning; TC-08 löser till Autokorrigerad; TC-15 löser till Åtgärd krävs (FIL-ANTAL-1 olöst efter omkörning); TC-01 löser till Godkänd
 
-- [ ] **TI07** "Registrerat" sätts bara för Godkänd/Autokorrigerad eller ett uttryckligt mänskligt beslut
+- [x] **TI07** "Registrerat" sätts bara för Godkänd/Autokorrigerad eller ett uttryckligt mänskligt beslut
   - TI06:s Godkänd-/Autokorrigerad-resultat sätter `dokumentstatus` till "Registrerat" som en del av samma TI02-grindade skrivning; Mänsklig bedömning/Åtgärd krävs lämnar `dokumentstatus` oförändrad om inte entry pointen (TI08) tar emot en uttrycklig mänsklig beslutshändelse
   - **Verify**: TC-08 slutar med `dokumentstatus` "Registrerat"; TC-13 och TC-15 slutar med `dokumentstatus` oförändrad från sitt indatavärde
 
-- [ ] **TI08** En callable granskningsomgång-entry point orkestrerar TI01-TI07 och är kontraktet nedströms-storyer anropar
+- [x] **TI08** En callable granskningsomgång-entry point orkestrerar TI01-TI07 och är kontraktet nedströms-storyer anropar
   - En enda funktion/endpoint som tar emot ett dokument-id (eller dokument+ärende) kör TI01→TI03→TI05→TI06→TI07 i ordning och returnerar den färdiga omgången (status, applicerade rättningar, fynd, bekräftelse att loggposterna skrivits); det här är "Granskningsomgång orchestration contract"-sharedDecisionen (`docs/plan.json#sharedDecisions.1`) som S07:s godkänn/avvisa/skicka, S08:s "Skicka för ny granskning" och S09:s testkörare alla anropar, så signaturen bär inget UI-sessionsspecifikt tillstånd
   - **Verify**: att anropa entry pointen en gång vardera mot TC-01, TC-08, TC-13 och TC-15 ger exakt den status FR4:s Acceptance Criteria namnger för respektive fall, utan att anroparen kopplar ihop TI01-TI07 manuellt
 
@@ -168,4 +168,13 @@ file   | docs/s02-kontrollogg-infrastruktur.md            | S02:s append/läs-AP
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/lib/granskning/omgang/` – `sammanslagning.ts` (TI01), `status.ts` (TI06), `rattning.ts` (TI03/TI04), `zip.ts`, `omgang.ts` (TI02, TI05, TI07, TI08) och `omgang.test.ts`. Entry pointen är `korGranskningsomgang`, den enda plats S07/S08/S09 ska utlösa en omgång från.
+- **Ägarskapskonflikten i FIL-raderna är verklig, och sammanslagningen bär den.** S04 producerar utfall för alla sex FIL-regler, S05 för de fem vars metod innehåller C eller H. Fem regel-ID:n får alltså utfall från båda motorerna varje omgång. Lagret reducerar med sämsta-utfallet-vinner (ej genomförd > fynd > ej tillämplig > uppfylld) och behåller varje fynd från varje motor. Konflikten är därmed ofarlig i drift, men den är inte löst – dubbelarbetet kostar AI-anrop för FIL-LASBAR-1, FIL-SKANN-1 och FIL-UNDERTECKNAD-1 som S04 redan avgjort deterministiskt. Kvar för Steg 6:s tvärgående granskning.
+- En regel som ingen motor rapporterar får utfallet "ej genomförd", inte "uppfylld". En lucka i täckningen ska synas som Mänsklig bedömning, inte tyst räknas som godkänd.
+- **Mänsklig bedömning avgörs mot katalogens metod, inte mot fyndets.** S05 sätter `metod: "AI-bedömning"` på sina fynd, så H-regler går inte att känna igen på fyndet. Statuslogiken slår upp regeln i katalogen i stället.
+- **Loggrinden skriver posten före mutationen och kör mutationen först vid lyckad skrivning.** Rättningarna är därför uppdelade i förberedelse och tillämpning: `forberedRattning` räknar ut före/efter utan att röra dokumentet, loggposten skrivs, och först då kallas `tillampa`. Misslyckad skrivning ger FR5:s felmeddelande och räknas som kvarstående fel, vilket ger Åtgärd krävs.
+- **Auto-rättningen har en hårdkodad allowlist** `{AD-KONTAKT-5, FIL-ZIP-1}` som andra spärr utöver katalogens flagga. Ett test sätter auto-flaggan på AD-DATUM-1 i en felkonfigurerad katalog och verifierar att inget datum ändras. Ett strukturtest söker dessutom igenom modulens källkod efter tilldelningar till `ankomstdatum`, `dokumentdatum`, `diarienummer` och `skyddskod`.
+- **Zip-uppackningen är riktig, inte simulerad.** `zip.ts` läser filnamnen ur zip-filens centrala katalog (ingen npm-tillgång för ett zip-bibliotek, och ingen behövs – dokumentmodellen håller bara filnamn). En lösenordsskyddad zip eller en zip i en zip packas inte upp utan degraderas till förslag, enligt `prd.md#edge-cases`. Filer slås upp via en injicerad `filkalla`; utan den misslyckas rättningen kontrollerat. Testfixtur: `test/fixtures/anbud_bilagor.zip` med två poster, så TC-15:s omkörning av FIL-ANTAL-1 fortfarande avviker mot `antal_bilagor: 3`.
+- Omkörningen (TI05) kör båda motorerna en gång till med en ny AI-omgång, så S05:s per-omgång-cache inte återanvänder svar från före rättningen. Rättningssteget körs inte igen – ett test räknar loggens ändringsposter till exakt en för TC-15.
+- **Ändring utanför S06:** `tsconfig.json` saknade `DOM` i `lib`, vilket gjorde att S05:s `fetch`/`Response`-användning inte typkontrollerade. Tillagt, annars går `npm run typecheck` inte att köra när typescript väl finns.
+- Dokumentstatus läses och skrivs som `arendedokument.status`. S03 tvingar den till "Färdig" vid inläsning, och testerna speglar det i stället för testcases.json:s "Registrerat".
