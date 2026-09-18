@@ -233,7 +233,7 @@
       ],
       "parallel": true,
       "risk": "high",
-      "status": "spec-ready",
+      "status": "done",
       "fis": "s05-ai-bedomning-av-innehall.md",
       "owner": null,
       "scope": "Produce a machine-checked outcome and finding for every catalog rule using method C or H, backed by the Claude API. Includes: assessing document content/case data per applicable C/H rule, the FR6 finding shape plus AI confidence, falling back to \"ej genomförd\" without halting the rest of the round on any AI error, timeout or unparsable response, and the empirically-tuned confidence threshold recorded in the catalog. Excludes: method M/M+L rules (S04) and the status consequence of an uncertain or failed AI outcome (S06).",

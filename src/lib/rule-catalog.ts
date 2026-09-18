@@ -21,6 +21,8 @@ export interface ChecklistRule {
 
 export interface ChecklistCatalog {
   version: string;
+  /** AI-fynd med konfidens under detta värde markeras osäkra (S05). Trimmas empiriskt mot S09:s testsvit. */
+  aiKonfidenstroskel: number;
   rules: ChecklistRule[];
 }
 
@@ -87,6 +89,14 @@ function validateRule(rule: ChecklistRule, seenIds: Set<string>): void {
 }
 
 function validateCatalog(catalog: ChecklistCatalog): void {
+  const troskel = catalog.aiKonfidenstroskel;
+  if (typeof troskel !== 'number' || !(troskel >= 0 && troskel <= 1)) {
+    throw new CatalogValidationError(
+      `aiKonfidenstroskel måste vara ett tal mellan 0 och 1, fick "${String(troskel)}"`,
+      '',
+      'aiKonfidenstroskel',
+    );
+  }
   const seenIds = new Set<string>();
   for (const rule of catalog.rules) {
     validateRule(rule, seenIds);

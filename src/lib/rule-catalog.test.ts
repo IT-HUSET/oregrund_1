@@ -111,6 +111,18 @@ describe('loadChecklistCatalog', () => {
     });
   });
 
+  it('S05 [OC03] [TI03]: aiKonfidenstroskel is loaded from the catalog and must lie in [0, 1]', () => {
+    assert.equal(loadChecklistCatalog().aiKonfidenstroskel, 0.75);
+    const mutatedPath = withMutatedCatalog((catalog) => {
+      catalog.aiKonfidenstroskel = 1.5;
+    });
+    assert.throws(() => loadChecklistCatalog(mutatedPath), (error: unknown) => {
+      assert.ok(error instanceof CatalogValidationError);
+      assert.equal(error.field, 'aiKonfidenstroskel');
+      return true;
+    });
+  });
+
   it('S05 [OC03] [TI01]: the OSL 5:2 rule set carries allvarlighetsgrad Lagkrav', () => {
     const catalog = loadChecklistCatalog();
     for (const ruleId of LAGKRAV_RULE_IDS) {

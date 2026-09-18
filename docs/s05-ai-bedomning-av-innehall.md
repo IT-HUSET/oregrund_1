@@ -28,37 +28,37 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI02,TI04] Korrekt baseline ger inga fynd (TC-01)**
+- [x] **S01 [OC01] [TI02,TI04] Korrekt baseline ger inga fynd (TC-01)**
   - **Given** TC-01:s ärende/ärendedokument/fil (`casedetails/testcases.json`) med `dokumenttext` som tydligt och korrekt beskriver ett internt beslut
   - **When** dispatch kör varje katalogregel vars metod innehåller C eller H mot dokumentet
   - **Then** varje tillämpligt utfall är uppfylld eller ej tillämplig, och inget fynd produceras
 
-- [ ] **S02 [OC01] [TI04] Innehållsfynd bär hela FR6-formen (TC-04)**
+- [x] **S02 [OC01] [TI04] Innehållsfynd bär hela FR6-formen (TC-04)**
   - **Given** TC-04:s ärendedokument, vars titel innehåller ett personnamn
   - **When** AD-TITEL-4:s handler bedömer det via Claude-klienten
   - **Then** utfallet är fynd med regel-ID AD-TITEL-4, allvarlighetsgrad, metod "AI-bedömning", evidens som citerar titeln, en svensk förklaring och ett konfidensvärde
 
-- [ ] **S03 [OC01] [TI05] Oläsbar fil kortsluter AI-anropet och nedströms filregler blir ej genomförd (TC-16)**
+- [x] **S03 [OC01] [TI05] Oläsbar fil kortsluter AI-anropet och nedströms filregler blir ej genomförd (TC-16)**
   - **Given** TC-16:s fil med `ar_lasbar: false`
   - **When** S05 utvärderar FIL-LASBAR-1 och de filinnehålls-regler som behöver samma fil (FIL-SKANN-1, FIL-UNDERTECKNAD-1)
   - **Then** FIL-LASBAR-1 blir fynd direkt från läsbarhetsfaktan (inget konfidensfält, inget Claude-anrop), och de andra filinnehållsreglerna för samma fil blir ej genomförd i stället för att bedömas mot oläsbart innehåll
 
-- [ ] **S04 [OC02] [TI08] AI-tjänsten otillgänglig degraderar hela omgången utan att stanna**
+- [x] **S04 [OC02] [TI08] AI-tjänsten otillgänglig degraderar hela omgången utan att stanna**
   - **Given** en granskningsomgång där Claude-anropet timeoutar/felar på den första dispatchade regeln
   - **When** S05 fortsätter processa resterande regler i sin dispatch-mängd för dokumentet
   - **Then** varje dispatchad regel blir ej genomförd, S04:s deterministiska utfall i samma omgång påverkas inte, och omgången slutförs (kastar inte) och går att köra om
 
-- [ ] **S05 [OC03] [TI07] Lågt konfidens-AI-fynd markeras osäkert, inte ett definitivt fynd**
+- [x] **S05 [OC03] [TI07] Lågt konfidens-AI-fynd markeras osäkert, inte ett definitivt fynd**
   - **Given** ett Claude-svar för AD-KATEGORI-1 (blandad inkommande/utgående-riktning, TC-12-liknande) som kommer tillbaka med konfidens under katalogens konfigurerade tröskel
   - **When** S05 mappar svaret till ett RuleOutcome
   - **Then** utfallet taggas osäker i stället för ett definitivt fynd, och bär ändå hela FR6-fyndformen
 
-- [ ] **S06 [OC01] [TI09] Rättningsförslag återinför aldrig ett personnamn (TC-04)**
+- [x] **S06 [OC01] [TI09] Rättningsförslag återinför aldrig ett personnamn (TC-04)**
   - **Given** TC-04:s personnamn-i-titel-fynd
   - **When** AD-TITEL-4:s handler bygger ett rättningsförslag
   - **Then** det föreslagna titelförslaget innehåller inget personnamn
 
-- [ ] **S07 [OC01] [TI06] Saknad fil ger ej tillämplig, inte fynd eller ej genomförd**
+- [x] **S07 [OC01] [TI06] Saknad fil ger ej tillämplig, inte fynd eller ej genomförd**
   - **Given** ett dokument utan bifogade filer
   - **When** S05 utvärderar FIL-SKANN-1, FIL-UNDERTECKNAD-1, FIL-MISSIV-1 och FIL-ANTAL-1
   - **Then** de tre filinnehålls-beroende reglerna blir ej tillämplig, medan FIL-ANTAL-1 (katalogens uttryckliga undantag) fortfarande ger ett verkligt utfall
@@ -66,9 +66,9 @@
 
 ## Structural Criteria
 
-- [ ] Varje katalograd vars `metod`-fält innehåller C eller H har exakt en S05-handler; ingen ren M/M+L-rad hanteras här.
-- [ ] Inget rule-id får mer än ett Claude API-anrop per granskningsomgång.
-- [ ] Endast syntetiska fixturer från `casedetails/testcases.json` når Claude-klienten i den här storyns automatiska tester – aldrig ett riktigt dokument (NFR-Security, `docs/plan.json#bindingConstraints`).
+- [x] Varje katalograd vars `metod`-fält innehåller C eller H har exakt en S05-handler; ingen ren M/M+L-rad hanteras här.
+- [x] Inget rule-id får mer än ett Claude API-anrop per granskningsomgång.
+- [x] Endast syntetiska fixturer från `casedetails/testcases.json` når Claude-klienten i den här storyns automatiska tester – aldrig ett riktigt dokument (NFR-Security, `docs/plan.json#bindingConstraints`).
 
 
 ## Scope & Boundaries
@@ -119,39 +119,39 @@ file   | docs/prd.md#fr1-regelkatalog      | Regeltabell (id, metod, allvarlighe
 
 ### Implementation Tasks
 
-- [ ] **TI01** En timeout-skyddad Claude API-klient returnerar alltid ett typat resultat, aldrig en okontrollerad exception eller hängning
+- [x] **TI01** En timeout-skyddad Claude API-klient returnerar alltid ett typat resultat, aldrig en okontrollerad exception eller hängning
   - Wrappar ett enskilt regelbedömningsanrop med en timeout; en timeout, ett transportfel eller ett svar som inte går att tolka till förväntad verdikt-form ytar alla som samma typade fel-variant anroparen kan göra om till "ej genomförd" (`docs/prd.md#fr3-granskning` felhantering); tester körs bara mot `casedetails/testcases.json`-fixturer, aldrig ett riktigt dokument (`docs/plan.json#bindingConstraints` NFR-Security).
   - **Verify**: Test: en simulerad timeout och ett simulerat otolkbart svar returnerar båda fel-varianten inom konfigurerad timeout, ingen exception kastas och inget test når ett riktigt nätverksanrop.
 
-- [ ] **TI02** Dispatch väljer exakt de katalograder vars metod innehåller C eller H
+- [x] **TI02** Dispatch väljer exakt de katalograder vars metod innehåller C eller H
   - Läser S01:s `checklist_rules.json` `metod`-fält (`docs/prd.md#fr1-regelkatalog`) och bygger handler-mängden av varje rad som innehåller "C" eller "H" (täcker kombinationer som M/C, M+L/C, C/H, M → H); rena metod-M-auto-rättningsrader hamnar aldrig i mängden.
   - **Verify**: Test: en katalogfixtur som spänner över M, M+L, C, C/H, M/C och M → H ger en dispatch-mängd som matchar exakt raderna som innehåller C eller H, och exkluderar varje ren M/M+L-rad.
 
-- [ ] **TI03** Regelkatalogen bär en konfigurerbar konfidenströskel och ett anropstak per regel
+- [x] **TI03** Regelkatalogen bär en konfigurerbar konfidenströskel och ett anropstak per regel
   - Lägger till/läser ett tröskelvärde från S01:s katalogkonfig (`docs/plan.json#riskSummary`: "empirically-tuned confidence threshold"); dispatch (TI02) räknar anrop per rule-id och omgång och vägrar ett andra anrop för samma rule-id inom en omgång (`docs/plan.json#riskSummary`: "cap AI calls to one per applicable rule per round").
   - **Verify**: Test: två dispatch-anrop för samma rule-id inom en omgång ger max ett Claude-anrop för det rule-id:t; tröskelvärdet som används läses från katalogkonfig, inte en literal i handler-koden.
 
-- [ ] **TI04** Innehållsbedömningshandlers producerar FR6-formade fynd för titel-, kontakt-, process- och klassificeringsregler
+- [x] **TI04** Innehållsbedömningshandlers producerar FR6-formade fynd för titel-, kontakt-, process- och klassificeringsregler
   - Täcker varje dispatchad (TI02) rule-id bland AR-TITEL-1..4, AR-PROCESS-1, AR-KONTAKT-1, AR-KONTAKT-4, AD-TITEL-1..4, AD-KONTAKT-1, AD-KONTAKT-4, AD-DATUM-1, AD-HANDLINGSTYP-1, AD-KATEGORI-1, FIL-ANTAL-1, FIL-MISSIV-1; varje handler skickar regelns regeltext plus relevanta ärende-/ärendedokumentfält och `dokumenttext` (`casedetails/testcases.json`) genom TI01:s klient och mappar svaret till regel-ID, allvarlighetsgrad, metod "AI-bedömning", evidens, konfidens, svensk förklaring och rättningsförslag (`docs/prd.md#fr6-förklarade-fynd`).
   - **Verify**: Test: TC-04- och TC-12-fixturerna (`casedetails/testcases.json`) ger vardera sin förväntade regels fynd med evidens/förklaring/konfidens; TC-01:s rena baseline ger inget fynd från den här handler-gruppen.
 
-- [ ] **TI05** Filinnehållshandlers täcker FIL-LASBAR-1, FIL-SKANN-1 och FIL-UNDERTECKNAD-1
+- [x] **TI05** Filinnehållshandlers täcker FIL-LASBAR-1, FIL-SKANN-1 och FIL-UNDERTECKNAD-1
   - FIL-LASBAR-1 mappar filens läsbarhetsfakta direkt till uppfylld/fynd utan Claude-anrop (en binär teknisk fakta kräver inget omdöme); när en fil är oläsbar returnerar varje annan handler i denna task som behöver filens innehåll ej genomförd i stället för att försöka bedöma den; FIL-SKANN-1 och FIL-UNDERTECKNAD-1 anropar TI01:s klient med `dokumenttext` som underlag när filen är läsbar.
   - **Verify**: Test: TC-16:s oläsbar-fil-fixtur ger ett FIL-LASBAR-1-fynd utan konfidensfält och inget registrerat Claude-anrop, plus ej genomförd för FIL-SKANN-1/FIL-UNDERTECKNAD-1 på samma dokument; TC-17:s läsbar-fil-fixtur ger ett FIL-SKANN-1-fynd med konfidens.
 
-- [ ] **TI06** En saknad fil ger ej tillämplig för filregler, med katalogens uttryckliga undantag respekterat
+- [x] **TI06** En saknad fil ger ej tillämplig för filregler, med katalogens uttryckliga undantag respekterat
   - En dispatchad filberoende regel utan bifogad fil blir ej tillämplig utan Claude-anrop; undantaget för FIL-ANTAL-1 (`docs/prd.md#fr3-granskning` validering: "Det gäller inte FIL-ANTAL-1") läses från regelmängden, inte hårdkodat mot ett rule-id, i linje med TI02:s datadrivna mönster.
   - **Verify**: Test: en fixtur med tom `fil.filer` ger ej tillämplig för FIL-SKANN-1, FIL-UNDERTECKNAD-1 och FIL-MISSIV-1, medan FIL-ANTAL-1 fortfarande ger ett utfall som inte är ej tillämplig.
 
-- [ ] **TI07** Ett AI-fynd under den konfigurerade konfidenströskeln markeras osäker
+- [x] **TI07** Ett AI-fynd under den konfigurerade konfidenströskeln markeras osäker
   - Jämför varje Claude-svars konfidens mot TI03:s tröskel; under tröskeln taggas utfallet osäker i stället för ett definitivt fynd, men bär ändå hela FR6-fyndformen (`docs/prd.md#fr3-granskning` AC: "konfidens under tröskeln markeras som osäker"); statuskonsekvensen av osäker ligger utanför scope här (S06).
   - **Verify**: Test: ett stubbat lågkonfidenssvar (t.ex. 0.4 mot en konfigurerad tröskel på 0.75) på valfri TI04-handler ytar sitt fynd taggat osäker, inte ett vanligt fynd.
 
-- [ ] **TI08** En otillgänglig eller felande AI-tjänst degraderar hela omgången till ej genomförd utan att stanna granskningen
+- [x] **TI08** En otillgänglig eller felande AI-tjänst degraderar hela omgången till ej genomförd utan att stanna granskningen
   - När TI01:s klient returnerar sin fel-variant för valfri dispatchad regel blir varje regel i TI02:s dispatch-mängd för den omgången ej genomförd (inte en delvis mix); S04:s deterministiska utfall i samma omgång är opåverkade; omgången slutförs och förblir körbar igen (`docs/adr.md#beslut-2-granskningspipeline--deterministiskt--ai--status`; `docs/prd.md#fr3-granskning` felhantering).
   - **Verify**: Test: en simulerad Claude API-avbrott för en granskningsomgång ger ej genomförd för varje regel i dispatch-mängden och lämnar en fullständig, oförändrad mängd deterministiska utfall för samma omgång.
 
-- [ ] **TI09** Rättningsförslag introducerar aldrig en fabricerad kontakt, ett personnamn eller sekretessrelevant innehåll
+- [x] **TI09** Rättningsförslag introducerar aldrig en fabricerad kontakt, ett personnamn eller sekretessrelevant innehåll
   - Titelregel-handlers som producerar ett rättningsförslag (AR-TITEL-4, AD-TITEL-4, och varje annan handler som ytar ett) stryker eller avvisar ett förslag som innehåller ett personnamn (`docs/prd.md#fr6-förklarade-fynd` AC); ingen handler hittar på en kontakt som inte finns i indata.
   - **Verify**: Test: TC-04:s personnamn-i-titel-fixtur (`casedetails/testcases.json`) ger ett rättningsförslag utan personnamn.
 
@@ -164,4 +164,10 @@ file   | docs/prd.md#fr1-regelkatalog      | Regeltabell (id, metod, allvarlighe
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/lib/granskning/ai/` (`klient.ts`, `handlers.ts`, `dispatch.ts`, tester i `ai.test.ts`), delat kontrakt i `src/lib/granskning/types.ts`. Ingångspunkt för S06: `bedomAiRegler({ dokument, katalog, klient, omgang? })` → `{ utfall, aiModell }`. Verifierat med `npm test` (54 pass); `tsc` finns inte installerat, så `npm run typecheck` är inte körd.
+- **Lucka i FIS:** TI04:s regellista saknar AD-SEKRETESS-1 (metod `M → H`), men det strukturella kriteriet kräver en handler per C/H-rad. Handlern anropar aldrig Claude (PRD Constraints: sekretessfrågor går till människa): `ej tillämplig` om skyddskoden inte är Sekretess eller ärendet inte är Avslutat, annars `ej genomförd`.
+- **Tolkning av TI08:** ett klientfel (timeout, transportfel eller otolkbart svar från en enda regel) ger `ej genomförd` för varje regel som ställde en fråga till Claude, även regler vars svar hunnit lyckas. Regler som avgörs utan Claude (FIL-LASBAR-1, ej tillämplig, AD-SEKRETESS-1) behåller sitt utfall. Efter första felet ställs inga fler frågor. OC02 ("den drabbade regeln") och TI08 ("hela omgången") skiljer sig åt; TI08 följdes.
+- Anropstaket är fast ett per rule-id och omgång (`Omgang`-cache), inte en katalogparameter. Bara `aiKonfidenstroskel` (0.75, katalogversion 1.1.0) ligger i `checklist_rules.json`.
+- `Fynd.metod` är `'AI-bedömning' | 'Deterministisk regel'` (FR6-formuleringen), `Fynd.regeltext` finns med. S06 mappar till loggens `FyndPost` (C/H-token, utan regeltext).
+- Rättningsförslags personnamnsspärr är en heuristik (två versalinledda ord i följd, samt orden i `ansvarig`). Den stryker hellre för mycket än läcker ett namn. S09 bör mäta falska strykningar.
+- Riktig klient: `skapaClaudeKlient({ apiKey, modell?, timeoutMs? })` (standard `claude-sonnet-5`, 15 s). Anropar Messages API med `fetch`, inget SDK-beroende. Inte körd mot riktiga API:t.

@@ -1,5 +1,6 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "aiKonfidenstroskel": 0.75,
   "rules": [
     { "id": "AR-TITEL-1", "niva": "Ärende", "falt": "Titel", "regeltext": "Titeln ska tydligt beskriva vad ärendet rör.", "felvillkor": "titeln inte tydligt beskriver vad ärendet rör", "metod": "C/H", "allvarlighetsgrad": "Fel", "autoRattning": false },
     { "id": "AR-TITEL-2", "niva": "Ärende", "falt": "Titel", "regeltext": "Titeln ska inte innehålla oskrivna förkortningar.", "felvillkor": "den innehåller förkortningar som inte är utskrivna", "metod": "M/C", "allvarlighetsgrad": "Anmärkning", "autoRattning": false },
