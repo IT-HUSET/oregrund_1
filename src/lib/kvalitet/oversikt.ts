@@ -9,6 +9,7 @@
 import type { KontrolloggPost, ManskligtBeslutPost } from '../kontrollogg/types.ts';
 import { AUTO_RATTNINGSBARA } from '../granskning/omgang/rattning.ts';
 import type { Granskningsstatus } from '../granskning/omgang/status.ts';
+import { STICKPROV_FELBEDOMNING, STICKPROV_UTAN_ANMARKNING } from '../stickprov.ts';
 import { lasAllaPoster } from './lasning.ts';
 
 /** FR4:s fyra statusar, i den ordning översikten redovisar dem. */
@@ -81,19 +82,23 @@ const INGA_STICKPROV =
   'Inga stickprov är gjorda ännu, så andelen felbedömningar går inte att beräkna.';
 
 /**
- * Stickprovsbeslut känns igen på beslutstexten i den mänskliga beslutsposten.
- * S11 har ingen FIS ännu, så kontraktet är avsiktligt tolerant: ett beslut som
- * nämner stickprov räknas som ett stickprov, och ett som dessutom nämner
- * felbedömning räknas som en markerad felbedömning. Stäms av mot S11:s FIS.
+ * Stickprovsbeslut känns igen på beslutstexten. S11 skriver konstanterna nedan;
+ * mönstren finns kvar som fallback för poster som skrevs innan S11 fanns.
  */
 const STICKPROV_MONSTER = /stickprov/i;
 const FELBEDOMNING_MONSTER = /felbedömning/i;
 
 function arStickprov(beslut: ManskligtBeslutPost): boolean {
-  return STICKPROV_MONSTER.test(beslut.beslut);
+  return (
+    beslut.beslut === STICKPROV_FELBEDOMNING ||
+    beslut.beslut === STICKPROV_UTAN_ANMARKNING ||
+    STICKPROV_MONSTER.test(beslut.beslut)
+  );
 }
 
 function arFelbedomning(beslut: ManskligtBeslutPost): boolean {
+  if (beslut.beslut === STICKPROV_FELBEDOMNING) return true;
+  if (beslut.beslut === STICKPROV_UTAN_ANMARKNING) return false;
   return arStickprov(beslut) && FELBEDOMNING_MONSTER.test(beslut.beslut);
 }
 

@@ -22,6 +22,9 @@ export default async function Registratorko({
   return (
     <>
       <h1>Registratorkö</h1>
+      <p className="undertitel">
+        <Link href="/stickprov">Stickprov på automatiskt registrerade dokument →</Link>
+      </p>
       <nav aria-label="Statusfilter" className="filter">
         {GRANSKNINGSSTATUSAR.map((s) => (
           <Link

@@ -34,32 +34,32 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01] Stickprovskön visar bara automatiskt registrerade dokument**
+- [x] **S01 [OC01] [TI01] Stickprovskön visar bara automatiskt registrerade dokument**
   - **Given** dokument finns med status Godkänd (TC-01), Autokorrigerad (TC-08), Åtgärd krävs och Mänsklig bedömning
   - **When** registratorn öppnar stickprovsvyn
   - **Then** listan visar bara TC-01 och TC-08, inte dokumenten med Åtgärd krävs eller Mänsklig bedömning
 
-- [ ] **S02 [OC01] [TI02] Registratorn öppnar ett registrerat dokument och ser dess fulla logg**
+- [x] **S02 [OC01] [TI02] Registratorn öppnar ett registrerat dokument och ser dess fulla logg**
   - **Given** TC-08:s dokument (Autokorrigerad, AD-KONTAKT-5 auto-rättades och `kopia_till` blev tomt)
   - **When** registratorn öppnar dokumentet från stickprovskön
   - **Then** vyn visar granskningsomgångens händelser i ordning, inklusive AD-KONTAKT-5:s före/efter-värden, utan någon synlig redigerings- eller raderingskontroll för befintliga poster
 
-- [ ] **S03 [OC02] [TI03,TI04,TI05] Registratorn flaggar ett fynd som felbedömning med kommentar**
+- [x] **S03 [OC02] [TI03,TI04,TI05] Registratorn flaggar ett fynd som felbedömning med kommentar**
   - **Given** TC-08:s dokument öppet i stickprovsvyn, med AD-KONTAKT-5-fyndet synligt i loggen
   - **When** registratorn markerar fyndet som felbedömning med kommentaren "Kopia till borde ha behållits – mottagaren behövde kopian"
   - **Then** en loggpost skrivs med roll Registrator, tidpunkt, fyndets regel-ID (AD-KONTAKT-5) och kommentaren, och markeringen syns i dokumentets logg-flik
 
-- [ ] **S04 [OC03] [TI04] Flaggning utan kommentar blockeras**
+- [x] **S04 [OC03] [TI04] Flaggning utan kommentar blockeras**
   - **Given** registratorn har öppnat flagga-som-felbedömning-dialogen för ett fynd
   - **When** registratorn försöker skicka markeringen med ett tomt kommentarfält
   - **Then** markeringen avvisas med ett valideringsmeddelande och ingen loggpost skrivs
 
-- [ ] **S05 [OC03] [TI05] Misslyckad sparning lämnar dokumentet oförändrat**
+- [x] **S05 [OC03] [TI05] Misslyckad sparning lämnar dokumentet oförändrat**
   - **Given** ett forcerat skrivfel i kontrolloggens append-anrop
   - **When** registratorn skickar en i övrigt giltig felbedömningsmarkering (kommentar ifylld)
   - **Then** ett felmeddelande visas, ingen ofullständig loggpost sparas, och dokumentets status, fyndlista och logg är oförändrade
 
-- [ ] **S06 [OC01] [TI01] Ingen registrerade dokument ger en förklarad tom vy**
+- [x] **S06 [OC01] [TI01] Ingen registrerade dokument ger en förklarad tom vy**
   - **Given** inga dokument har status Godkänd eller Autokorrigerad
   - **When** registratorn öppnar stickprovsvyn
   - **Then** vyn visar en förklarad tom vy, samma mönster som S07:s statusfilter använder, i stället för ett fel eller en blank lista
@@ -67,10 +67,10 @@
 
 ## Structural Criteria
 
-- [ ] Stickprovsvyn exponerar ingen kontroll som redigerar eller tar bort en befintlig loggpost (FR7 bindingConstraint; strukturellt garanterat genom att bara använda S02:s append/read-API).
-- [ ] En felbedömningsmarkering som misslyckas skriva till kontrolloggen lämnar dokumentets status, fyndlista och logg oförändrade och visar ett felmeddelande (FR12 Error Handling).
-- [ ] Kommentar krävs vid flaggning även om klientvalideringen kringgås (server-side), så en klientbypass inte kan skippa kravet (FR12 Validation; samma mönster som S07:s riskSummary-mitigation för avvisning-kräver-motivering).
-- [ ] En felbedömningsmarkering ändrar aldrig dokumentets data, status eller något regel-ID:s befintliga utfall -- bara en ny loggpost tillkommer (docs/prd.md#constraints: automatiken/registratorn ändrar aldrig data utöver auto-rättningsflaggade fält).
+- [x] Stickprovsvyn exponerar ingen kontroll som redigerar eller tar bort en befintlig loggpost (FR7 bindingConstraint; strukturellt garanterat genom att bara använda S02:s append/read-API).
+- [x] En felbedömningsmarkering som misslyckas skriva till kontrolloggen lämnar dokumentets status, fyndlista och logg oförändrade och visar ett felmeddelande (FR12 Error Handling).
+- [x] Kommentar krävs vid flaggning även om klientvalideringen kringgås (server-side), så en klientbypass inte kan skippa kravet (FR12 Validation; samma mönster som S07:s riskSummary-mitigation för avvisning-kräver-motivering).
+- [x] En felbedömningsmarkering ändrar aldrig dokumentets data, status eller något regel-ID:s befintliga utfall -- bara en ny loggpost tillkommer (docs/prd.md#constraints: automatiken/registratorn ändrar aldrig data utöver auto-rättningsflaggade fält).
 
 
 ## Scope & Boundaries
@@ -117,23 +117,23 @@ file   | docs/adr.md#skiss                                                      
 
 ### Implementation Tasks
 
-- [ ] **TI01** Stickprovskön listar bara dokument med status Godkänd eller Autokorrigerad
+- [x] **TI01** Stickprovskön listar bara dokument med status Godkänd eller Autokorrigerad
   - Filtrerar på S06:s omgångskontrakts slutstatus (`docs/plan.json#sharedDecisions.1`); en tom kö visar en förklarad tom vy i stället för ett fel eller en blank lista, samma mönster som S07:s statusfilter (`docs/s07-registratorvy.md`)
   - **Verify**: en fixtur med dokument i alla fyra statusar (inkl. TC-01 Godkänd, TC-08 Autokorrigerad) visar bara de två registrerade statusarna vid stickprovsvyns öppning; en fixtur utan Godkända/Autokorrigerade dokument visar en förklarad tom vy
 
-- [ ] **TI02** Dokumentdetaljvyn återanvänder S07:s flik-/loggstruktur för ett stickprovat dokument
+- [x] **TI02** Dokumentdetaljvyn återanvänder S07:s flik-/loggstruktur för ett stickprovat dokument
   - Följer `docs/s07-registratorvy.md#implementation-tasks` (TI02/TI03) för fältindelning och logg-flikens append/read-läsning (`docs/plan.json#sharedDecisions.2`); exponerar ingen redigerings- eller raderingskontroll för befintliga loggposter
   - **Verify**: TC-08:s dokument öppnat från stickprovskön visar samma logghistorik (inklusive AD-KONTAKT-5:s före/efter-värden) som registratorns Mänsklig bedömning-detaljvy, utan någon synlig redigerings- eller raderingskontroll
 
-- [ ] **TI03** Registratorn kan markera ett specifikt fynd som felbedömning
+- [x] **TI03** Registratorn kan markera ett specifikt fynd som felbedömning
   - Varje fynd i ett stickprovat dokuments loggade granskningsomgång har en flagga-som-felbedömning-kontroll som öppnar ett kommentarfält; markeringen refererar fyndets regel-ID och den granskningsomgång det tillhör
   - **Verify**: TC-08:s AD-KONTAKT-5-fynd kan markeras som felbedömning från detaljvyn
 
-- [ ] **TI04** Flaggning kräver en kommentar, både i klienten och i det anropade API:t
+- [x] **TI04** Flaggning kräver en kommentar, både i klienten och i det anropade API:t
   - Blockerar tomt/whitespace-only kommentarfält innan anropet når S02:s writer; serversidig validering upprepar samma krav (Constraints & Gotchas), depends on TI03's flag control
   - **Verify**: ett anrop med tom kommentar avvisas med ett valideringsfel och ingen loggpost skrivs, oavsett om anropet görs via UI eller direkt mot API:t
 
-- [ ] **TI05** Varje giltig felbedömningsmarkering loggas innan den syns i logg-fliken, och ett misslyckat skrivförsök lämnar tillståndet oförändrat
+- [x] **TI05** Varje giltig felbedömningsmarkering loggas innan den syns i logg-fliken, och ett misslyckat skrivförsök lämnar tillståndet oförändrat
   - Anropar S02:s append-writer (`docs/plan.json#sharedDecisions.2`) med roll "Registrator", tidpunkt, fyndets regel-ID och kommentaren; skriver aldrig till dokumentets status- eller fyndfält (Avoid-regeln ovan)
   - **Verify**: en framtvingad loggskrivningsfel under en flaggning lämnar dokumentets logg och status oförändrade och visar ett felmeddelande; en lyckad flaggning ger en loggpost med roll, tid, regel-ID och kommentar synlig i logg-fliken, utan att dokumentets status eller något regel-ID:s utfall ändras
 
@@ -143,4 +143,12 @@ file   | docs/adr.md#skiss                                                      
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/lib/stickprov.ts` (kö-filter, validering, loggning), `src/app/stickprov/` (kö och detaljvy), `src/app/api/dokument/[id]/stickprov/route.ts`. Servern äger valideringen: API-rutten gör bara typkontroll av kroppen, allt annat prövas i `hanteraStickprov`, så en klient som kringgår formuläret möter samma krav.
+- **Markeringen skriver bara en kontrolloggpost.** `lager.spara` anropas aldrig – ett test söker källkoden efter det. Status, fynd och beslut är ordagrant oförändrade efter en markering, vilket ett annat test verifierar genom att jämföra hela lagerposten före och efter.
+- **Ett auto-rättat fynd står inte kvar i fyndlistan.** TC-08:s AD-KONTAKT-5 försvinner ur `post.fynd` i omkörningen eftersom fältet är rensat. Det är just ett sådant fynd en registrator kan vilja underkänna, så `markerbaraRegelIdn` unionerar kvarvarande fynd med de regel-ID:n som har automatiska ändringar i loggen. Utan det hade TC-08 inte gått att stickprova alls.
+- Detaljvyns fält- och loggrendering flyttades till `src/app/Dokumentvy.tsx` och delas nu av S07:s och S11:s detaljvyer, enligt storyns krav att återanvända ytan i stället för att bygga en parallell. S07:s sida är oförändrad i beteende.
+- **Tillägg utöver FR12:s ordalydelse:** vyn har även en "Granskat utan anmärkning"-knapp. FR12 nämner bara felbedömningsmarkeringen, men FR13:s nyckeltal är *andelen* felbedömningar av gjorda stickprov – och utan en loggad post för ett stickprov som inte ledde till någon anmärkning saknas nämnaren, så andelen blir alltid 100 %. Knappen är den minsta åtgärden som gör måttet meningsfullt. Ta bort den och utgången `utan-anmarkning` om verksamheten hellre vill mäta något annat; det är två rader plus en konstant.
+- Loggtexterna ligger som konstanter (`STICKPROV_FELBEDOMNING`, `STICKPROV_UTAN_ANMARKNING`) och importeras nu av kvalitetsöversikten, som tidigare gissade på fritext. Den toleranta mönstermatchningen finns kvar som fallback för poster skrivna innan S11 fanns.
+- Kön filtrerar på `granskningsstatus` i dokumentlagret, inte på dokumentstatus: Godkänd och Autokorrigerad är de enda som sätter Registrerat automatiskt (FR4), och det är precis den mängd som aldrig passerar registratorkön.
+- Med stubbad AI-klient är TC-08:s AD-KONTAKT-5 det enda markerbara fyndet bland de registrerade testfallen – TC-01 går igenom utan fynd. Fler markerbara fall kräver live-läge, samma begränsning som S09 rapporterar.
+- **Inte verifierat:** `.tsx`-filerna är inte typkontrollerade och appen är inte byggd. `node_modules` saknas på den här maskinen och npm ger 403, så `npm run build` gick inte att köra. Lib-lagret och testsviten är typkontrollerade och gröna.
