@@ -27,32 +27,32 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01,TI02,TI03] Status distribution across ten reviewed documents**
+- [x] **S01 [OC01] [TI01,TI02,TI03] Status distribution across ten reviewed documents**
   - **Given** a kontrollogg holding one resolved review round per document for 10 documents, resolving to 6 Godkänd, 2 Autokorrigerad, 1 Åtgärd krävs and 1 Mänsklig bedömning
   - **When** the overview is read
   - **Then** it reports counts 6/2/1/1 and shares 60%/20%/10%/10% for the four statuses, summing to 100%
 
-- [ ] **S02 [OC02] [TI01,TI04] Most common findings ranked by frequency**
+- [x] **S02 [OC02] [TI01,TI04] Most common findings ranked by frequency**
   - **Given** a kontrollogg whose logged findings include AD-KONTAKT-5 three times, FIL-ZIP-1 twice and AR-TITEL-1 once, across different documents and rounds
   - **When** the overview is read
   - **Then** the ranked findings list shows AD-KONTAKT-5 first with count 3, ahead of FIL-ZIP-1 (2) and AR-TITEL-1 (1)
 
-- [ ] **S03 [OC03] [TI01,TI05] Auto-correction count excludes downgraded/failed corrections**
+- [x] **S03 [OC03] [TI01,TI05] Auto-correction count excludes downgraded/failed corrections**
   - **Given** a kontrollogg with 5 applied AD-KONTAKT-5/FIL-ZIP-1 corrections (before/after values present) and 1 additional AD-KONTAKT-5 finding downgraded to a suggestion after a failed log write (per S06 TI04)
   - **When** the overview is read
   - **Then** the auto-correction count is 5, not 6
 
-- [ ] **S04 [OC03] [TI01,TI06] Misjudgment share computed over sampled documents, not all registered documents**
+- [x] **S04 [OC03] [TI01,TI06] Misjudgment share computed over sampled documents, not all registered documents**
   - **Given** a kontrollogg with 20 logged stickprov entries (S11's flag-as-misjudgment action) against a population of 200 registered documents, of which 4 stickprov entries are flagged as a misjudgment
   - **When** the overview is read
   - **Then** the misjudgment share is reported as 20% (4 of 20 sampled), not 2% (4 of 200 registered)
 
-- [ ] **S05 [OC03] [TI06] No stickprov samples yet does not divide by zero**
+- [x] **S05 [OC03] [TI06] No stickprov samples yet does not divide by zero**
   - **Given** a kontrollogg with logged review rounds but zero logged stickprov entries
   - **When** the overview is read
   - **Then** the misjudgment-share section shows an explained "inga stickprov ännu" state instead of a NaN, error, or a 0% that would misleadingly imply zero misjudgments were found
 
-- [ ] **S06 [OC04] [TI01,TI07] Empty kontrollogg shows an explained empty state**
+- [x] **S06 [OC04] [TI01,TI07] Empty kontrollogg shows an explained empty state**
   - **Given** a kontrollogg with zero entries
   - **When** the overview is read
   - **Then** every section (status distribution, findings, auto-corrections, misjudgment share) shows explanatory empty-state text per FR13's error handling, instead of blank output or a rendering error
@@ -60,9 +60,9 @@
 
 ## Structural Criteria
 
-- [ ] Every document with ≥1 logged review round contributes to exactly one status bucket, taken from its most recent round — a resubmitted, re-reviewed document is never counted twice or under its superseded status (proved by TI02's Verify).
-- [ ] No function this story exports calls S02's append API or any other mutation entry point — the overview module is read-only, per the plan story's "Excludes: any write actions (S07/S08/S11)" (proved by TI01's Verify).
-- [ ] Every figure (status shares, finding ranking, auto-correction count, misjudgment share) is recomputed from a fresh kontrollogg read on each view, with no separately cached or persisted copy that could drift from the log — per FR13's "Siffrorna stämmer med loggen" (proved by TI01's Verify).
+- [x] Every document with ≥1 logged review round contributes to exactly one status bucket, taken from its most recent round — a resubmitted, re-reviewed document is never counted twice or under its superseded status (proved by TI02's Verify).
+- [x] No function this story exports calls S02's append API or any other mutation entry point — the overview module is read-only, per the plan story's "Excludes: any write actions (S07/S08/S11)" (proved by TI01's Verify).
+- [x] Every figure (status shares, finding ranking, auto-correction count, misjudgment share) is recomputed from a fresh kontrollogg read on each view, with no separately cached or persisted copy that could drift from the log — per FR13's "Siffrorna stämmer med loggen" (proved by TI01's Verify).
 
 
 ## Scope & Boundaries
@@ -110,31 +110,31 @@ file   | docs/prd.md#fr13-kvalitetsöversikt                                    
 
 ### Implementation Tasks
 
-- [ ] **TI01** A log-wide read returns every kontrollogg entry across all documents
+- [x] **TI01** A log-wide read returns every kontrollogg entry across all documents
   - Extends beyond S02's per-document filter (`docs/s02-kontrollogg-infrastruktur.md`) with an all-entries read against the same `kontrollogg.jsonl` store, reusing S02's entry shape; exposes no write/mutation call.
   - **Verify**: `Test: appending entries for 3 distinct document ids then reading all-entries returns all 3; an empty store returns an empty list, not an error; the module contains no call into S02's append API; an entry appended between two reads appears on the second read with no separate update step`
 
-- [ ] **TI02** Every document resolves to exactly one of the four statuses, taken from its latest logged review round
+- [x] **TI02** Every document resolves to exactly one of the four statuses, taken from its latest logged review round
   - Groups TI01's entries by document id; a document with multiple rounds (e.g. a handläggare resubmission per `docs/s06-granskningsomgang-status-auto-rattning-och-logg.md`) keeps only its chronologically last round's status.
   - **Verify**: `Test: a document with 2 logged rounds (first Åtgärd krävs, second Autokorrigerad) contributes exactly one count, to Autokorrigerad`
 
-- [ ] **TI03** Overview shows the count and percentage share of documents per status
+- [x] **TI03** Overview shows the count and percentage share of documents per status
   - Reduces TI02's per-document statuses into the four FR4 buckets (Mänsklig bedömning, Åtgärd krävs, Autokorrigerad, Godkänd); shares sum to 100% across the four buckets.
   - **Verify**: `Test: a fixture of 10 resolved statuses (6 Godkänd, 2 Autokorrigerad, 1 Åtgärd krävs, 1 Mänsklig bedömning) yields matching counts and shares of 60/20/10/10 percent`
 
-- [ ] **TI04** Overview ranks the most common rule findings across every logged review round
+- [x] **TI04** Overview ranks the most common rule findings across every logged review round
   - Counts each finding occurrence by rule id across all of TI01's entries (not deduplicated per document), ranked descending by count.
   - **Verify**: `Test: a fixture with 3 AD-KONTAKT-5, 2 FIL-ZIP-1 and 1 AR-TITEL-1 finding ranks AD-KONTAKT-5 first with count 3`
 
-- [ ] **TI05** Overview counts applied auto-corrections, restricted to S06's allowlisted rules
+- [x] **TI05** Overview counts applied auto-corrections, restricted to S06's allowlisted rules
   - Counts entries carrying an applied before/after change for AD-KONTAKT-5 or FIL-ZIP-1 (`docs/s06-granskningsomgang-status-auto-rattning-och-logg.md` TI03); a correction downgraded to a suggestion after a failed log write (S06 TI04) is not counted as applied.
   - **Verify**: `Test: a fixture with 5 applied AD-KONTAKT-5/FIL-ZIP-1 corrections and 1 failed-correction suggestion counts 5, not 6`
 
-- [ ] **TI06** Overview shows the share of stickprov samples flagged as a misjudgment
+- [x] **TI06** Overview shows the share of stickprov samples flagged as a misjudgment
   - Aggregates human-decision log entries representing S11's flag-as-misjudgment action (`docs/plan.json#stories.10`); share = flagged-misjudgment entries ÷ total stickprov entries logged (documents actually sampled), not all registered documents, since most registered documents are never sampled.
   - **Verify**: `Test: a fixture with 20 logged stickprov entries of which 4 are flagged misjudgment reports a share of 20%; a fixture with 0 stickprov entries shows an explained "not yet sampled" state instead of dividing by zero`
 
-- [ ] **TI07** An explained empty state replaces every section when the kontrollogg has no entries at all
+- [x] **TI07** An explained empty state replaces every section when the kontrollogg has no entries at all
   - Distinct from TI06's "no samples yet" sub-state; covers the whole-overview case per FR13's error-handling Acceptance Criterion ("Om data saknas visas tomt läge med förklaring").
   - **Verify**: `Test: reading the overview against a store with zero entries shows explanatory empty-state text for every section instead of NaN, 0%, or a blank page`
 
@@ -145,4 +145,11 @@ file   | docs/prd.md#fr13-kvalitetsöversikt                                    
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- Kod: `src/lib/kvalitet/` – `lasning.ts` (TI01, loggbred läsning) och `oversikt.ts` (TI02–TI07). Modulen är läs-only: ett test låser fast exportlistan, ett annat söker källkoden efter `laggTill`/`oppnaKontrollogg`. Siffrorna räknas om vid varje anrop, ingen cache (FR13: "Siffrorna stämmer med loggen").
+- Läsningen går mot samma `kontrollogg.jsonl` med S02:s egen radtolkning (`tolkaPost`) i stället för att duplicera parsningen eller bredda S02:s publika API, som avsiktligt bara har append och läs-per-dokument.
+- **Fyndrankingen räknar en regel en gång per granskningsomgång, inte en gång per fynd.** S04 och S05 rapporterar båda flera FIL-regler, så samma problem loggas som två fynd i samma omgång. En verifieringskörning mot alla 20 testfall visade FIL-LASBAR-1 två gånger för ett enda dokument. Två omgångar för samma dokument räknas däremot var för sig, enligt TI04.
+- Auto-rättningar räknas ur ändringsposterna, filtrerade på `automatisk` och på S06:s allowlist. En rättning som degraderats efter en misslyckad loggskrivning har per definition ingen ändringspost – loggen skrivs före mutationen – så den kan inte råka räknas som utförd.
+- Ett dokument hamnar i statusfördelningen först när det har en loggpost med ett granskningsstatusbyte. Rättningsposter bär bara en ändring och skapar alltså inget dokument i statistiken. Vid flera omgångar vinner den senaste posten, med tilläggsordningen som utslagsgivare när två poster delar sekund.
+- **Stickprovskontraktet är provisoriskt.** S11 har ingen FIS ännu, så ett mänskligt beslut räknas som ett stickprov om beslutstexten nämner "stickprov", och som en felbedömning om den dessutom nämner "felbedömning". Matchningen är avsiktligt tolerant och måste stämmas av när S11:s FIS finns – helst genom att S11 loggar ett strukturerat fält i stället för fritext.
+- Nämnaren för felbedömningsandelen är antalet stickprov, inte antalet registrerade dokument. Utan stickprov är andelen `null` med en förklaring, inte 0 %, som felaktigt skulle antyda att inga felbedömningar hittats.
+- **Verifieringskörning mot hela pipelinen** (S03-formade dokument → S06 → logg → översikt) för alla 20 testfall: 15 av 20 får rätt status med en stubbad AI-klient. TC-04, TC-05, TC-11, TC-12 och TC-19 blir Godkänd i stället för flaggad, eftersom deras fynd är rent innehållsbaserade (personnamn i titel, engelsk titel, fel handlingstyp mot innehållet, blandade riktningar, process som inte stämmer med ärendet) och kräver ett riktigt modellsvar. S09 behöver alltså antingen en API-nyckel eller inspelade svar för att köra sviten grönt.
