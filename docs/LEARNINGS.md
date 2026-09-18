@@ -7,10 +7,9 @@
      `andthen-ops` skill (`update-learnings` forms), which owns the 150-line ceiling and
      `learnings/` shard graduation. Delete entries once encoded as checks or stale. -->
 
-## [Topic Area 1]
-<!-- e.g. "Language Traps", "Framework Patterns", "API Quirks", "Deployment", etc. -->
+## Granskning
 
-- **[Trap/insight]**: [Description] _(context/version)_
+- **S04-förslag är ofta instruktioner** – AD-TITEL-2:s rattningsforslag är "Skriv ut förkortningarna…", inte en ersättningstitel; S08 skriver strängen in i fältet. _(S08, `regler.ts`)_
 
 ## Error Patterns
 <!-- Log recurring errors. Deterministic errors (bad schema, wrong type) → conclude immediately.

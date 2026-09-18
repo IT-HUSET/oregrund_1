@@ -37,32 +37,32 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01] Åtgärd-krävs queue shows only documents in that status**
+- [x] **S01 [OC01] [TI01] Åtgärd-krävs queue shows only documents in that status**
   - **Given** TC-03's document (diarienummer `2026-00103`) has completed a granskningsomgång with status "Åtgärd krävs" and finding AD-TITEL-2, while TC-01's document is at status "Godkänd"/"Registrerat"
   - **When** a handläggare opens handläggarvyn
   - **Then** the queue lists TC-03's document with its AD-TITEL-2 finding, and TC-01's document does not appear
 
-- [ ] **S02 [OC02] [TI02,TI03] Applying a rättningsförslag updates the field and is logged**
+- [x] **S02 [OC02] [TI02,TI03] Applying a rättningsförslag updates the field and is logged**
   - **Given** TC-03's document detail view showing the AD-TITEL-2 finding for titel `"Bslt ang IK-plan 2026 fr GD"` with its suggested corrected title
   - **When** the handläggare clicks "Tillämpa förslag" on that finding
   - **Then** the document's titel field is replaced by the suggested value, and the kontrollogg (S02) records a log entry with the before/after title values and role "Handläggare"
 
-- [ ] **S03 [OC03] [TI05] Skicka för ny granskning on a corrected document registers it**
+- [x] **S03 [OC03] [TI05] Skicka för ny granskning on a corrected document registers it**
   - **Given** TC-03's document with its titel already corrected via S02's suggestion and no other outstanding findings
   - **When** the handläggare clicks "Skicka för ny granskning"
   - **Then** the full review reruns via the Granskningsomgång orchestration contract, the document receives status "Godkänd", dokumentstatus becomes "Registrerat", and it no longer appears in the handläggarvy's Åtgärd-krävs queue
 
-- [ ] **S04 [OC03] [TI05] A failed rerun leaves the document in Åtgärd krävs with an error shown**
+- [x] **S04 [OC03] [TI05] A failed rerun leaves the document in Åtgärd krävs with an error shown**
   - **Given** TC-15's document at status "Åtgärd krävs" with the review rerun forced to fail (e.g. the orchestration call errors)
   - **When** the handläggare clicks "Skicka för ny granskning"
   - **Then** the document's status remains "Åtgärd krävs", no new status is set, and an error message is shown per FR9's error handling
 
-- [ ] **S05 [OC04] [TI04] Diarienummer edits are rejected server-side**
+- [x] **S05 [OC04] [TI04] Diarienummer edits are rejected server-side**
   - **Given** TC-03's document open in the handläggarvy's editable detail view
   - **When** the handläggare submits a changed diarienummer value (e.g. via a direct request bypassing the disabled field)
   - **Then** the server rejects the change, the stored diarienummer remains `"2026-00103"`, and no diarienummer-change log entry is written
 
-- [ ] **S06 [OC04] [TI06] Direct Registrerat status writes are rejected server-side**
+- [x] **S06 [OC04] [TI06] Direct Registrerat status writes are rejected server-side**
   - **Given** TC-15's document at status "Åtgärd krävs" open in the handläggarvy
   - **When** the handläggare's client submits a direct status change to "Registrerat" (bypassing "Skicka för ny granskning")
   - **Then** the server rejects the request, the document's status remains "Åtgärd krävs", and Registrerat is reachable only through a successful "Skicka för ny granskning" round (S03) or an explicit registrator decision (S07, out of scope here)
@@ -70,8 +70,8 @@
 
 ## Structural Criteria
 
-- [ ] Diarienummer-immutability and Registrerat-blocking validation are enforced by the server endpoint that applies suggestions/edits, not only disabled in client UI — a direct request bypassing the UI is still rejected (S08 risk mitigation, `plan.json` riskSummary).
-- [ ] Applying a suggestion or field edit only takes effect after its kontrollogg (S02) log write succeeds; a forced log-write failure leaves the field unchanged, per FR7/ADR Beslut 3's fail-closed gate.
+- [x] Diarienummer-immutability and Registrerat-blocking validation are enforced by the server endpoint that applies suggestions/edits, not only disabled in client UI — a direct request bypassing the UI is still rejected (S08 risk mitigation, `plan.json` riskSummary).
+- [x] Applying a suggestion or field edit only takes effect after its kontrollogg (S02) log write succeeds; a forced log-write failure leaves the field unchanged, per FR7/ADR Beslut 3's fail-closed gate.
 
 
 ## Scope & Boundaries
@@ -117,31 +117,41 @@ file   | casedetails/testcases.json#cases  | TC-03 (AD-TITEL-2) / TC-15 (FIL-ZIP
 
 ### Implementation Tasks
 
-- [ ] **TI01** Handläggarvyns queue lists exactly the documents currently at status Åtgärd krävs
+- [x] **TI01** Handläggarvyns queue lists exactly the documents currently at status Åtgärd krävs
   - Reads each document's current review status from the Dokument/Ärende model (S03) as updated by the Granskningsomgång orchestration contract (S06); no dependency on S06's internal module shape, only its resulting status field.
   - **Verify**: `Test: given one document at Åtgärd krävs (TC-03) and one at Godkänd (TC-01), the queue returns only the Åtgärd-krävs document`
 
-- [ ] **TI02** Document detail view renders every finding with its rule id, severity, evidence, Swedish explanation, and rättningsförslag
+- [x] **TI02** Document detail view renders every finding with its rule id, severity, evidence, Swedish explanation, and rättningsförslag
   - Follows the RuleOutcome/Finding contract (`plan.json` sharedDecisions[0]) produced by S04/S05.
   - **Verify**: `Test: opening TC-03's document detail shows the AD-TITEL-2 finding with rule id, Swedish explanation, and its suggested corrected title text`
 
-- [ ] **TI03** Applying a finding's suggestion updates its field and is gated on a successful kontrollogg write
+- [x] **TI03** Applying a finding's suggestion updates its field and is gated on a successful kontrollogg write
   - Depends on TI02. Calls S02's append API with an FR7-shaped before/after entry (role "Handläggare") before the field change is considered applied; a failed log write leaves the field unchanged.
   - **Verify**: `Test: clicking "Tillämpa förslag" on TC-03's AD-TITEL-2 finding updates titel to the suggested value and appends a log entry recording the before/after title and role Handläggare; forcing the log write to fail leaves titel unchanged`
 
-- [ ] **TI04** Fields are directly editable except diarienummer, which the server rejects regardless of client state
+- [x] **TI04** Fields are directly editable except diarienummer, which the server rejects regardless of client state
   - Depends on TI01. Validation runs server-side on the same handler that applies edits/suggestions (TI03), not only as a disabled UI field, per the S08 risk mitigation in `plan.json`'s riskSummary.
   - **Verify**: `Test: editing an allowed field (e.g. avsandare) on TC-03's document persists; submitting a changed diarienummer value through the same endpoint is rejected and the stored diarienummer stays "2026-00103"`
 
-- [ ] **TI05** "Skicka för ny granskning" reruns the full review via the Granskningsomgång orchestration contract and reflects the resulting status
+- [x] **TI05** "Skicka för ny granskning" reruns the full review via the Granskningsomgång orchestration contract and reflects the resulting status
   - Depends on TI03, TI04 (edits/suggestions apply before rerun). Calls the entry point described in `plan.json` sharedDecisions[1]; the exact function name is resolved at build time against S06's implementation.
   - **Verify**: `Test: sending TC-03's corrected document for new review yields status Godkänd and dokumentstatus Registrerat, and it leaves the Åtgärd-krävs queue; forcing the rerun call to fail leaves the document at Åtgärd krävs with an error message shown`
 
-- [ ] **TI06** Handläggaren cannot set status Registrerat directly, only via a successful "Skicka för ny granskning" round
+- [x] **TI06** Handläggaren cannot set status Registrerat directly, only via a successful "Skicka för ny granskning" round
   - Depends on TI04's server-side validation pattern. Any direct status write to Registrerat through this view's endpoints is rejected independent of client state.
   - **Verify**: `Test: a direct request setting TC-15's document status to Registrerat (bypassing Skicka för ny granskning) is rejected, and the document's status remains Åtgärd krävs`
 
 
 ## Implementation Observations
 
-_No observations recorded yet._
+### Run: 2026-09-18 16:00 UTC – observations
+
+#### NOTICED BUT NOT TOUCHING
+
+- S04:s `rattningsforslag` för AD-TITEL-2 (och flera andra M-regler) är en instruktion, inte ett ersättningsvärde (`src/lib/granskning/regler.ts`). S08 skriver strängen till det mappade fältet, vilket TI03:s Verify kräver ("updates titel to the suggested value"). S03:s Godkänd-väg sätter därför en giltig titel via fältredigering (samma endpoint). Ett byte till "bara tillämpa substituterbara värden" eller att S04 emitterar ersättningstitlar är ett kontraktsbeslut, inte en S08-lokal fix.
+- `docs/KEY_DEVELOPMENT_COMMANDS.md` nämner bara `/registrator`, inte `/handlaggare`.
+- Utan `ANTHROPIC_API_KEY` landar `npm run seed` alla fall i Mänsklig bedömning; handläggarkön är tom tills registratorn skickar fynd.
+
+#### ASSUMPTIONS (AUTO_MODE)
+
+- Inga AUTO_MODE-antaganden; körningen var interaktiv.

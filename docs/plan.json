@@ -316,7 +316,7 @@
       ],
       "parallel": true,
       "risk": "medium",
-      "status": "spec-ready",
+      "status": "done",
       "fis": "s08-handlaggarvy.md",
       "owner": null,
       "scope": "Give the handläggare a working return-and-fix flow. Includes: a list of Åtgärd-krävs documents, a detail view with editable fields and one-click suggestion application, a \"Skicka för ny granskning\" action that re-runs S04-S06, and validation blocking diarienummer edits and handläggare-set Registrerat status. Excludes: the registrator flow (S07), stickprov/kvalitetsöversikt (S11/S12).",
