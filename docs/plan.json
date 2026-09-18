@@ -376,8 +376,8 @@
       ],
       "parallel": true,
       "risk": "low",
-      "status": "pending",
-      "fis": null,
+      "status": "spec-ready",
+      "fis": "s11-stickprov.md",
       "owner": null,
       "scope": "Let the registrator sample automatically registered documents. Includes: a filter/list for Godkänd/Autokorrigerad documents, an open-log action, and a flag-as-misjudgment action with a required comment that is logged. Excludes: aggregating misjudgment rates into a dashboard (S12).",
       "sourceRefs": [
@@ -400,8 +400,8 @@
       ],
       "parallel": true,
       "risk": "low",
-      "status": "pending",
-      "fis": null,
+      "status": "spec-ready",
+      "fis": "s12-kvalitetsoversikt.md",
       "owner": null,
       "scope": "Give the business owner a read-only quality overview. Includes: counts/shares of documents per review status, the most common rule findings, auto-correction counts and the share of stickprov-flagged misjudgments, computed from the S02 log, with an explained empty state when no data exists. Excludes: any write actions (S07/S08/S11) and production retention concerns.",
       "sourceRefs": [
