@@ -17,13 +17,15 @@ export interface Fynd {
   regelId: string;
   regeltext: string;
   allvarlighetsgrad: Allvarlighetsgrad;
-  /** Metodvärdet från katalogen, t.ex. "M", "M+L/C" eller "M → H". */
+  /** Katalogens metodvärde, t.ex. "M", "M+L/C" eller "M → H", för deterministiska fynd. "AI-bedömning" för AI-fynd (S05). */
   metod: string;
   evidens: string;
   forklaring: string;
   rattningsforslag?: string;
   /** Sätts bara av AI-motorn (S05). Deterministiska fynd saknar konfidens (FR6). */
   konfidens?: number;
+  /** Sätts bara av S05: konfidensen ligger under katalogens `aiKonfidenstroskel`. */
+  osaker?: boolean;
 }
 
 export interface Regelutfall {
@@ -31,6 +33,8 @@ export interface Regelutfall {
   utfall: Utfall;
   /** Finns om och endast om utfallet är "fynd". */
   fynd?: Fynd;
+  /** Varför utfallet är "ej tillämplig" eller "ej genomförd". Sätts av S05. */
+  orsak?: string;
 }
 
 /**

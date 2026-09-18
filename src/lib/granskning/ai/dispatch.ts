@@ -5,7 +5,7 @@
  */
 
 import type { ChecklistCatalog, ChecklistRule } from '../../rule-catalog.ts';
-import type { Dokument, RegelUtfall } from '../types.ts';
+import type { GranskatDokument as Dokument, Regelutfall as RegelUtfall } from '../kontrakt.ts';
 import { arAiRegel, HANDLERS, nyttUtfall, type HandlerKontext, type HandlerResultat } from './handlers.ts';
 import type { AiKlient } from './klient.ts';
 
@@ -98,8 +98,11 @@ export async function bedomAiRegler(indata: AiGranskningIndata): Promise<AiGrans
   const klientfel = resultat.find((rad) => rad.klientfel !== undefined)?.klientfel;
   const utfall = resultat.map((rad): RegelUtfall => {
     if (klientfel === undefined || !rad.anvandeKlient) return rad.utfall;
-    const { regelId, metod } = rad.utfall;
-    return { regelId, metod, utfall: 'ej genomförd', orsak: `AI-tjänsten svarade inte som väntat (${klientfel})` };
+    return {
+      regelId: rad.utfall.regelId,
+      utfall: 'ej genomförd',
+      orsak: `AI-tjänsten svarade inte som väntat (${klientfel})`,
+    };
   });
   return { utfall, aiModell: anropad ? klient.modell : null };
 }

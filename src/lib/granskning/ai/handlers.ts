@@ -6,7 +6,7 @@
  */
 
 import type { ChecklistRule } from '../../rule-catalog.ts';
-import type { Dokument, Fynd, RegelUtfall } from '../types.ts';
+import type { Fynd, GranskatDokument as Dokument, Regelutfall as RegelUtfall } from '../kontrakt.ts';
 import type { AiBegaran, AiVerdikt, KlientFel, KlientSvar } from './klient.ts';
 
 export interface HandlerKontext {
@@ -36,8 +36,7 @@ export function arAiRegel(regel: ChecklistRule): boolean {
 }
 
 export function nyttUtfall(regel: ChecklistRule, typ: RegelUtfall['utfall'], orsak?: string): RegelUtfall {
-  // Den halva av regelns metod som S05 äger: C, annars H.
-  const rad: RegelUtfall = { regelId: regel.id, metod: metodTokens(regel.metod).includes('C') ? 'C' : 'H', utfall: typ };
+  const rad: RegelUtfall = { regelId: regel.id, utfall: typ };
   if (orsak !== undefined) rad.orsak = orsak;
   return rad;
 }
@@ -68,7 +67,8 @@ export function saneraForslag(forslag: string | undefined, dokument: Dokument): 
   if (forslag === undefined) return undefined;
   if (NAMNMONSTER.test(forslag)) return undefined;
 
-  const ansvarigNamn = (dokument.arendedokument.ansvarig ?? '').split(' - ')[0] ?? '';
+  const ansvarig = dokument.arendedokument.ansvarig;
+  const ansvarigNamn = typeof ansvarig === 'string' ? (ansvarig.split(' - ')[0] ?? '') : '';
   const namnord = ansvarigNamn.split(/\s+/).filter((ord) => ord.length > 1);
   const ordIForslag = forslag.toLowerCase().split(/[^\p{L}]+/u);
   if (namnord.some((ord) => ordIForslag.includes(ord.toLowerCase()))) return undefined;
@@ -291,7 +291,7 @@ const lasbarhet: Handler = async ({ regel, dokument }) => {
     regelId: regel.id,
     regeltext: regel.regeltext,
     allvarlighetsgrad: regel.allvarlighetsgrad,
-    metod: 'Deterministisk regel',
+    metod: regel.metod,
     evidens: `${dokument.fil?.filer.join(', ')}: ar_lasbar = false`,
     forklaring: 'Filen går inte att öppna och kan därför inte granskas. Den är troligen skadad.',
     rattningsforslag: 'Be handläggaren ladda upp en fungerande version av filen.',

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { loadChecklistCatalog, type ChecklistCatalog } from '../../rule-catalog.ts';
-import type { Dokument } from '../types.ts';
+import type { GranskatDokument as Dokument } from '../kontrakt.ts';
 import { bedomAiRegler, skapaOmgang, valjAiRegler } from './dispatch.ts';
 import { HANDLERS, saneraForslag } from './handlers.ts';
 import { skapaClaudeKlient, tolkaVerdikt, type AiBegaran, type AiKlient, type AiVerdikt, type KlientSvar } from './klient.ts';
@@ -206,7 +206,7 @@ describe('Filregler (S05 TI05, TI06)', () => {
 
     assert.equal(per('FIL-LASBAR-1').utfall, 'fynd');
     assert.equal(per('FIL-LASBAR-1').fynd!.konfidens, undefined);
-    assert.equal(per('FIL-LASBAR-1').fynd!.metod, 'Deterministisk regel');
+    assert.equal(per('FIL-LASBAR-1').fynd!.metod, 'C');
     assert.equal(per('FIL-SKANN-1').utfall, 'ej genomförd');
     assert.equal(per('FIL-UNDERTECKNAD-1').utfall, 'ej genomförd');
     for (const id of ['FIL-LASBAR-1', 'FIL-SKANN-1', 'FIL-UNDERTECKNAD-1']) assert.ok(!ids().includes(id), `${id} ska inte anropa Claude`);
