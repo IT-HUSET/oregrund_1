@@ -24,22 +24,22 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01,TI02,TI03] Append a review-round event and read it back**
+- [x] **S01 [OC01] [TI01,TI02,TI03] Append a review-round event and read it back**
   - **Given** a document id `"ARENDE-2025-01053-DOK-1"` and rule-catalog version `"1.0.0"`
   - **When** the writer appends a status-transition event with timestamp, per-rule outcomes, findings, before/after values, and a human decision (role, time, motivering)
   - **Then** reading that document id's log returns exactly that entry, with every field intact, as the only item in its history
 
-- [ ] **S02 [OC01,OC03] [TI02,TI03] Full history across multiple review rounds, earlier entries unchanged**
+- [x] **S02 [OC01,OC03] [TI02,TI03] Full history across multiple review rounds, earlier entries unchanged**
   - **Given** a document that already has one logged review round
   - **When** a second review round (following an auto-correction) is appended for the same document
   - **Then** reading the document's log returns both entries in append order, and the first entry's fields are byte-for-byte unchanged — the store gained a row, nothing was overwritten
 
-- [ ] **S03 [OC02] [TI02] A failed write aborts the change and leaves the log untouched**
+- [x] **S03 [OC02] [TI02] A failed write aborts the change and leaves the log untouched**
   - **Given** the append-only store's write path is forced to fail (e.g. the underlying write call errors)
   - **When** a caller attempts to append an event
   - **Then** the writer surfaces a failure the caller can detect, no partial or corrupted entry appears in the store, and a subsequent read for that document returns the same entries as before the attempt
 
-- [ ] **S04 [OC03] [TI03] Reading a never-logged document returns empty history, not an error**
+- [x] **S04 [OC03] [TI03] Reading a never-logged document returns empty history, not an error**
   - **Given** a document id with no prior log entries
   - **When** its log is read
   - **Then** the read returns an empty history rather than throwing or returning an error
@@ -47,8 +47,8 @@
 
 ## Structural Criteria
 
-- [ ] Concurrent append calls targeting the same store do not lose or corrupt entries (simple lock, per ADR Beslut 3's "kräver ett enkelt lås" consequence)
-- [ ] No function exported by the kontrollogg module updates or deletes an existing log entry (FR7 acceptance criterion + ADR Beslut 3: "Inget API eller UI exponerar uppdatering eller radering mot loggfilen")
+- [x] Concurrent append calls targeting the same store do not lose or corrupt entries (simple lock, per ADR Beslut 3's "kräver ett enkelt lås" consequence)
+- [x] No function exported by the kontrollogg module updates or deletes an existing log entry (FR7 acceptance criterion + ADR Beslut 3: "Inget API eller UI exponerar uppdatering eller radering mot loggfilen")
 
 
 ## Scope & Boundaries
@@ -93,19 +93,19 @@ file   | docs/prd.md#fr7-kontrollogg                                          | 
 
 ### Implementation Tasks
 
-- [ ] **TI01** Kontrollogg entry shape is defined as the shared data contract
+- [x] **TI01** Kontrollogg entry shape is defined as the shared data contract
   - Captures timestamp, document id, rule-catalog version, AI model, per-rule outcomes, findings (rule id/severity/method/evidence/explanation/confidence), before/after values, status transitions, and human decisions (role, time, motivering) per FR7 and `plan.json`'s "Kontrollogg event schema" sharedDecision — S06, S07/S08, S11 and S12 all depend on this shape.
   - **Verify**: `Test: a constructed log entry satisfying the schema round-trips through serialize/deserialize without field loss`
 
-- [ ] **TI02** Append-only writer persists an entry and fails closed
+- [x] **TI02** Append-only writer persists an entry and fails closed
   - Synchronous append to the `kontrollogg.jsonl` store (`docs/adr.md#beslut-3-oföränderlig-kontrollogg-append-only`); on failure, nothing partial is written and the caller receives an unambiguous failure signal. Concurrent append calls to the same store are serialized by a simple lock so no entry is lost or corrupted.
   - **Verify**: `Test: two concurrent appends for the same document both persist as separate, complete entries; a forced write failure surfaces to the caller and adds nothing to the store`
 
-- [ ] **TI03** Per-document read returns full ordered history across review rounds
+- [x] **TI03** Per-document read returns full ordered history across review rounds
   - Reads and filters the append-only store by document id, returning entries in append order across every review round; a document with no entries returns an empty history rather than erroring. Depends on TI01's entry shape and TI02's store.
   - **Verify**: `Test: after appending 2 entries for one document across two simulated rounds, read returns both in order; reading a never-logged document id returns an empty history`
 
-- [ ] **TI04** No update or delete entry point exists on the kontrollogg module's public API
+- [x] **TI04** No update or delete entry point exists on the kontrollogg module's public API
   - The module exports only append and read-by-document-id; structurally enforces FR7's "Loggposter går inte att ändra eller radera via gränssnittet."
   - **Verify**: `Test/inspection: the module's exports contain no function that updates or removes an existing entry`
 
@@ -115,4 +115,9 @@ file   | docs/prd.md#fr7-kontrollogg                                          | 
 
 ## Implementation Observations
 
-_No observations recorded yet._
+- The repo had no code scaffold. S02 added a minimal one: `package.json` (ESM, no dependencies), `tsconfig.json`, and `src/lib/kontrollogg/`. Next.js is deliberately not scaffolded yet – the first UI story (S07/S08) needs it, S02 does not.
+- npm's registry is blocked by egress policy in this environment, so the test suite runs on Node's built-in `node:test` runner with Node's type stripping (`node --test "src/**/*.test.ts"`, Node >= 22.18). Relative imports therefore carry the `.ts` extension. `npm run typecheck` needs `typescript` + `@types/node` from a registry and cannot run here; the code was type-checked out-of-band with `tsc --noEmit` (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) and is clean.
+- `laggTill` is async so that a schema violation reaches the caller as a rejected promise rather than a synchronous throw – S06 gates status changes on this single failure path.
+- The lock is a per-file promise chain in `store.ts`. It serializes appends within one process, which is what ADR Beslut 3's "enkelt lås" covers at prototype scale; multi-process writers would need a real file lock.
+- Forced-write-failure coverage (scenario S03) makes the log file read-only rather than mocking `fs`, so the test exercises the real `appendFileSync` error path. It self-skips when running as root.
+- The entry schema omits a review-round number: append order carries the rounds, per FR7's field list. S06 should raise a contract change if it needs one explicitly.
