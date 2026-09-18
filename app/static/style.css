@@ -1,0 +1,97 @@
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --border: #dbe1e8;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --blue: #1d4ed8;
+  --blue-bg: #e8efff;
+  --green: #157347;
+  --green-bg: #e6f4ea;
+  --amber: #92400e;
+  --amber-bg: #fef3c7;
+  --red: #b42318;
+  --red-bg: #fde8e6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+
+header.topbar {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+header.topbar h1 { font-size: 1.05rem; margin: 0; }
+header.topbar .sub { color: var(--muted); font-size: 0.85rem; }
+header.topbar a { color: var(--blue); text-decoration: none; margin-left: auto; font-size: 0.85rem; }
+
+main { max-width: 1040px; margin: 0 auto; padding: 20px 24px 60px; }
+
+h2 { font-size: 1rem; margin: 28px 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+th { background: #f8fafc; color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #fafbfc; cursor: pointer; }
+
+.badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.76rem; font-weight: 600; }
+.badge.godkand { background: var(--green-bg); color: var(--green); }
+.badge.flaggad { background: var(--amber-bg); color: var(--amber); }
+.badge.kind-deterministic { background: var(--blue-bg); color: var(--blue); }
+.badge.kind-judgment { background: #f3e8ff; color: #7e22ce; }
+.badge.kind-policy { background: var(--red-bg); color: var(--red); }
+
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+
+dl.meta { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 0.86rem; }
+dl.meta dt { color: var(--muted); }
+dl.meta dd { margin: 0; }
+
+.check-row { border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+.check-row.passed { background: #fafffb; }
+.check-row.failed { background: #fffaf3; }
+.check-row .rule-head { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; }
+.check-row .status-icon { font-size: 0.9rem; }
+.check-row.passed .status-icon { color: var(--green); }
+.check-row.failed .status-icon { color: var(--amber); }
+.check-row .reasoning { margin: 6px 0 0; font-size: 0.85rem; color: var(--text); }
+.check-row .evidence { margin: 4px 0 0; font-size: 0.78rem; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+.check-row .ack { margin-top: 6px; font-size: 0.76rem; color: var(--green); font-weight: 600; }
+
+.fix-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+.fix-card .diff { font-family: ui-monospace, Consolas, monospace; font-size: 0.82rem; margin: 6px 0; }
+.fix-card .diff .before { color: var(--red); text-decoration: line-through; }
+.fix-card .diff .after { color: var(--green); }
+
+button { font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--panel); cursor: pointer; }
+button.primary { background: var(--blue); border-color: var(--blue); color: white; }
+button.primary:hover { background: #1741b0; }
+button:hover { background: #f2f4f7; }
+button.primary:hover { background: #1741b0; }
+button + button { margin-left: 8px; }
+
+.audit-item { font-size: 0.82rem; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.audit-item:last-child { border-bottom: none; }
+.audit-item .actor { font-weight: 600; }
+.audit-item .ts { color: var(--muted); font-size: 0.74rem; }
+
+textarea, input[type=text] { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--border); border-radius: 6px; }
+label { display: block; font-size: 0.82rem; color: var(--muted); margin: 10px 0 4px; }
+
+.empty { color: var(--muted); font-size: 0.85rem; padding: 10px 0; }

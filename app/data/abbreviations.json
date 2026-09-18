@@ -1,0 +1,8 @@
+{
+  "_comment": "Mock abbreviation dictionary used to detect AND, where possible, expand unexplained abbreviations in titles (AD-TITEL-2 / AR-TITEL-2). Keys are lowercase tokens as they'd appear in a title.",
+  "bslt": "Beslut",
+  "ang": "angående",
+  "ik-plan": "intern kontrollplan",
+  "fr": "från",
+  "gd": "Generaldirektören"
+}

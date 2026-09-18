@@ -1,0 +1,13 @@
+{
+  "_comment": "Mock stand-in for Janus/P360's real contact register. Names here are treated as known/registered organizations; anything else that looks org-like is flagged as needing a beställning hos registraturen (AD-KONTAKT-2 / AR-KONTAKT-2).",
+  "organisationer": [
+    "Statskontoret",
+    "Ekonomistyrningsverket",
+    "SCB",
+    "Riksarkivet",
+    "Exempelkommun",
+    "Exempelorganisationen",
+    "Kontorsleverantören AB",
+    "Leverantör X AB"
+  ]
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-kvalitetskontroll — Registratur</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>AI-kvalitetskontroll — Registratur</h1>
+  <span class="sub">Granskningskö (Statskontoret / Janus)</span>
+</header>
+<main>
+  <p style="color:var(--muted); font-size:0.88rem; max-width:70ch;">
+    Varje ärende nedan har kontrollerats mot samtliga regler i checklistan.
+    Klicka på ett ärende för att se den fullständiga granskningsloggen —
+    varje utförd kontroll, inte bara de som gav en flagga.
+  </p>
+
+  <h2>Ärenden</h2>
+  <table id="case-table">
+    <thead>
+      <tr><th>Diarienummer</th><th>Ärende</th><th>Ärendedokument</th><th>Status</th><th>Flaggor</th></tr>
+    </thead>
+    <tbody id="case-tbody"><tr><td colspan="5" class="empty">Laddar…</td></tr></tbody>
+  </table>
+
+  <h2>Steg 3 — generera ärendedokument från text</h2>
+  <div class="panel">
+    <p style="margin-top:0; font-size:0.85rem; color:var(--muted);">
+      Simulerar att en handling kommer in utan färdigt dokumentkort. AI föreslår
+      titel, handlingstyp och riktning utifrån texten — förslaget körs sedan
+      genom exakt samma kontroll- och rättningspipeline som alla andra ärenden.
+    </p>
+    <label for="gen-arende-titel">Ärendemening</label>
+    <input type="text" id="gen-arende-titel" placeholder="t.ex. Beslut om ny säkerhetspolicy 2026">
+    <label for="gen-process">Process</label>
+    <input type="text" id="gen-process" placeholder="t.ex. 1.2 - Leda och styra verksamheten">
+    <label for="gen-text">Handlingens text (simulerar extraherat filinnehåll)</label>
+    <textarea id="gen-text" rows="4" placeholder="t.ex. Generaldirektören beslutar att fastställa ny säkerhetspolicy från och med 2026-09-01."></textarea>
+    <div style="margin-top:12px;">
+      <button class="primary" id="gen-submit">Generera ärendedokument</button>
+    </div>
+  </div>
+</main>
+<script src="/app.js"></script>
+<script>loadCaseList();</script>
+</body>
+</html>

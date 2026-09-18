@@ -1,0 +1,5 @@
+# Pinned to what this project was built and tested against.
+# Python 3.8 caps anthropic below its 1.x line (which needs httpx2 and
+# Python >= 3.10) — do not bump past the 0.x series without also
+# upgrading the Python interpreter this runs under.
+anthropic==0.72.0
