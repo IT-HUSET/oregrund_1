@@ -1,0 +1,455 @@
+{
+  "schemaVersion": "1",
+  "prd": "prd.md",
+  "references": [
+    "adr.md"
+  ],
+  "overview": {
+    "summary": "Prototype that automatically reviews each ärendedokument marked \"Färdig\" against the 29-rule checklist from Checklistan, producing an explained, logged verdict (Godkänd/Autokorrigerad/Åtgärd krävs/Mänsklig bedömning) instead of today's ~20% manual coverage. Deterministic checks (metadata, contact-register/classification lookups, file analysis) and Claude-backed content/language assessments feed a status-and-auto-correction round that never touches datum, diarienummer or skyddskod, and every change is gated on an append-only audit log.\n\nFoundation work (rule catalog, reference data, ingestion, logging) lands first so the deterministic and AI rule engines can be built in parallel against a shared outcome contract. Registrator and handläggare web views, the 20-case synthetic test suite, sampling, a quality overview and the Janus/P360 integration plan follow once the pipeline is complete.",
+    "phases": [
+      {
+        "id": "P1",
+        "name": "Foundation",
+        "waves": [
+          "W1"
+        ]
+      },
+      {
+        "id": "P2",
+        "name": "Granskningsmotor och statuslogik",
+        "waves": [
+          "W2",
+          "W3"
+        ]
+      },
+      {
+        "id": "P3",
+        "name": "Gränssnitt",
+        "waves": [
+          "W4"
+        ]
+      },
+      {
+        "id": "P4",
+        "name": "Testsvit, leverabler och tillägg",
+        "waves": [
+          "W5",
+          "W6"
+        ]
+      }
+    ]
+  },
+  "sharedDecisions": [
+    {
+      "title": "RuleOutcome/Finding data contract",
+      "description": "Shared shape for a rule's outcome (uppfylld/fynd/ej tillämplig/ej genomförd) and a finding (rule id, severity, method, evidence, Swedish explanation, correction suggestion, confidence for AI findings) per FR6. Produced by S04 (deterministic) and S05 (AI); consumed by S06 (status/auto-correction), S07/S08 (display) and S09 (test comparison).",
+      "stories": [
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ]
+    },
+    {
+      "title": "Granskningsomgång orchestration contract",
+      "description": "How a review round invokes the S04/S05 engines, applies status precedence and auto-correction, and reruns exactly once, including the callable entry point used to trigger a fresh round. Produced by S06; consumed by S07 (approve/reject/send), S08 (Skicka för ny granskning) and S09 (test runner).",
+      "stories": [
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ]
+    },
+    {
+      "title": "Kontrollogg event schema",
+      "description": "The JSONL log-entry shape (timestamp, document id, rule-catalog version, AI model, per-rule outcomes, findings, before/after values, status transitions, human decisions) and the append/read API surface. Produced by S02; consumed by S06 (writes), S07/S08 (log tab), S11 (stickprov) and S12 (overview).",
+      "stories": [
+        "S02",
+        "S06",
+        "S07",
+        "S08",
+        "S11",
+        "S12"
+      ]
+    },
+    {
+      "title": "Dokument/Ärende data model",
+      "description": "The ingested document/case shape (ärende + ärendedokument + fil fields per FR2/Data Requirements) that every downstream story reads and, where permitted, writes. Produced by S03; consumed by S04, S05, S06, S07, S08, S09.",
+      "stories": [
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ]
+    }
+  ],
+  "bindingConstraints": [
+    {
+      "featureId": "Constraints",
+      "anchor": "prd.md#constraints",
+      "verbatim": "Datum, diarienummer och skyddskod ändras aldrig automatiskt."
+    },
+    {
+      "featureId": "FR5",
+      "anchor": "prd.md#fr5-automatisk-rättning-av-säkra-fel",
+      "verbatim": "Ingen annan regel än dem med auto-rättningsflagga ändrar data."
+    },
+    {
+      "featureId": "FR7",
+      "anchor": "prd.md#fr7-kontrollogg",
+      "verbatim": "Loggposter går inte att ändra eller radera via gränssnittet."
+    },
+    {
+      "featureId": "FR9",
+      "anchor": "prd.md#fr9-handläggarvy",
+      "verbatim": "Handläggaren kan inte ändra diarienummer. Handläggaren kan inte sätta status Registrerat."
+    },
+    {
+      "featureId": "NFR-Security",
+      "anchor": "prd.md#non-functional-requirements",
+      "verbatim": "0 riktiga ärenden eller handlingar skickas till AI-tjänsten"
+    }
+  ],
+  "stories": [
+    {
+      "id": "S01",
+      "name": "Regelkatalog och referensdata",
+      "phase": "P1",
+      "wave": "W1",
+      "dependsOn": [],
+      "parallel": true,
+      "risk": "low",
+      "status": "spec-ready",
+      "fis": "s01-regelkatalog-och-referensdata.md",
+      "owner": null,
+      "scope": "Produce and validate a versioned rule catalog and the simulated reference datasets the review engine depends on. Includes: checklist_rules.json holding the 29 checklist rules (id, level, field, rule text, fail condition, method, severity, auto-correction flag) validated for unique ids, allowed enum values, and auto-correction restricted to method M, with the catalog version available to callers; kontaktregister.json and klassificeringsstruktur.json covering every organization, process and handlingstyp used by testcases.json plus the PRD's stated assumptions (Rex Ljungqvist/Clas Olsson as tjänstepersoner, Myndigheten för digital förvaltningsutveckling absent from kontaktregister). Excludes: rule evaluation logic (S04/S05) and any catalog-editing UI.",
+      "sourceRefs": [
+        "FR1",
+        "prd.md#fr1-regelkatalog",
+        "prd.md#key-constraints-assumptions--dependencies",
+        "prd.md#dependencies"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "adr.md#beslut-1-regler-som-datadriven-konfiguration",
+        "casedetails/testcases.json"
+      ],
+      "notes": "Referensdata (kontaktregister/klassificeringsstruktur) has no own FR id; it is a Data Requirements / Assumptions dependency bundled here because both are static config the engine loads and validates at startup."
+    },
+    {
+      "id": "S02",
+      "name": "Kontrollogg-infrastruktur",
+      "phase": "P1",
+      "wave": "W1",
+      "dependsOn": [],
+      "parallel": true,
+      "risk": "medium",
+      "status": "spec-ready",
+      "fis": "s02-kontrollogg-infrastruktur.md",
+      "owner": null,
+      "scope": "Provide the append-only audit log every state change must successfully write to before it is allowed to take effect. Includes: the log entry shape (timestamp, document id, rule-catalog version, AI model, per-rule outcome, findings, before/after values, status transitions, human decisions with role/time/motivation), an append-only writer whose failure aborts the triggering change, and a per-document read returning the full history across review rounds. Excludes: log UI (S07/S08) and the domain decisions about what gets logged (S06 and later stories).",
+      "sourceRefs": [
+        "FR7",
+        "prd.md#fr7-kontrollogg",
+        "prd.md#non-functional-requirements"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "adr.md#beslut-3-oföränderlig-kontrollogg-append-only"
+      ],
+      "notes": null
+    },
+    {
+      "id": "S03",
+      "name": "Inläsning av dokument",
+      "phase": "P1",
+      "wave": "W1",
+      "dependsOn": [],
+      "parallel": true,
+      "risk": "low",
+      "status": "spec-ready",
+      "fis": "s03-inlasning-av-dokument.md",
+      "owner": null,
+      "scope": "Ingest a case, its document card and attached files as a document ready for review. Includes: accepting ärende/ärendedokument metadata and real files (PDF, .msg/.eml, zip, image/scan) per the FR2 schema, enforcing the required fields (diarienummer, dokumenttitel, handlingstyp, dokumentkategori, skyddskod) with a field-naming rejection error, forcing status to \"Färdig\" regardless of the input value, and handing the result to the review pipeline. Excludes: the review pipeline (S04-S06) and file-content analysis (S04).",
+      "sourceRefs": [
+        "FR2",
+        "prd.md#fr2-inläsning-av-dokument",
+        "prd.md#data-requirements-if-applicable"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "casedetails/testcases.json"
+      ],
+      "notes": null
+    },
+    {
+      "id": "S04",
+      "name": "Deterministisk granskningsmotor",
+      "phase": "P2",
+      "wave": "W2",
+      "dependsOn": [
+        "S01",
+        "S03"
+      ],
+      "parallel": true,
+      "risk": "medium",
+      "status": "spec-ready",
+      "fis": "s04-deterministisk-granskningsmotor.md",
+      "owner": null,
+      "scope": "Produce a machine-checked outcome and, where applicable, a fully explained finding for every catalog rule using method M or M+L. Includes: metadata checks, contact-register and classification-structure lookups, file analysis (readable/zip/page-count/signature), the ej-tillämplig outcome for missing files (except FIL-ANTAL-1), and the finding shape from FR6 (rule id, severity, method, evidence, Swedish explanation) for every M/M+L rule in the S01 catalog. Excludes: method C/H rules (S05), status aggregation and auto-correction (S06).",
+      "sourceRefs": [
+        "FR3",
+        "FR6",
+        "prd.md#fr3-granskning",
+        "prd.md#fr6-förklarade-fynd"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "adr.md#beslut-2-granskningspipeline--deterministiskt--ai--status"
+      ],
+      "notes": null
+    },
+    {
+      "id": "S05",
+      "name": "AI-bedömning av innehåll",
+      "phase": "P2",
+      "wave": "W2",
+      "dependsOn": [
+        "S01",
+        "S03"
+      ],
+      "parallel": true,
+      "risk": "high",
+      "status": "spec-ready",
+      "fis": "s05-ai-bedomning-av-innehall.md",
+      "owner": null,
+      "scope": "Produce a machine-checked outcome and finding for every catalog rule using method C or H, backed by the Claude API. Includes: assessing document content/case data per applicable C/H rule, the FR6 finding shape plus AI confidence, falling back to \"ej genomförd\" without halting the rest of the round on any AI error, timeout or unparsable response, and the empirically-tuned confidence threshold recorded in the catalog. Excludes: method M/M+L rules (S04) and the status consequence of an uncertain or failed AI outcome (S06).",
+      "sourceRefs": [
+        "FR3",
+        "FR6",
+        "prd.md#fr3-granskning",
+        "prd.md#fr6-förklarade-fynd",
+        "prd.md#dependencies"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "adr.md#beslut-2-granskningspipeline--deterministiskt--ai--status"
+      ],
+      "notes": null
+    },
+    {
+      "id": "S06",
+      "name": "Granskningsomgång: status, auto-rättning och logg",
+      "phase": "P2",
+      "wave": "W3",
+      "dependsOn": [
+        "S02",
+        "S04",
+        "S05"
+      ],
+      "parallel": false,
+      "risk": "high",
+      "status": "spec-ready",
+      "fis": "s06-granskningsomgang-status-auto-rattning-och-logg.md",
+      "owner": null,
+      "scope": "Turn a set of S04/S05 rule outcomes into a finished review round: final status, applied auto-corrections, and a written log entry. Includes: the four-status precedence (Mänsklig bedömning > Åtgärd krävs > Autokorrigerad > Godkänd), auto-correcting AD-KONTAKT-5 and FIL-ZIP-1 only, a single rerun of affected rules after correction, downgrading a failed auto-correction to a suggestion with an error message, gating every resulting status/data change on a successful S02 log write, and setting \"Registrerat\" only for Godkänd/Autokorrigerad or an explicit human decision. Excludes: the UI that triggers or displays a round (S07/S08) and the rule engines (S04/S05).",
+      "sourceRefs": [
+        "FR4",
+        "FR5",
+        "FR7",
+        "prd.md#fr4-statussättning",
+        "prd.md#fr5-automatisk-rättning-av-säkra-fel",
+        "prd.md#fr7-kontrollogg"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "adr.md#beslut-2-granskningspipeline--deterministiskt--ai--status",
+        "adr.md#beslut-3-oföränderlig-kontrollogg-append-only"
+      ],
+      "notes": "Consolidated from FR4+FR5 (+FR7 write-gating) because neither status precedence nor auto-correction has independent demo value without the other: the final status literally depends on whether auto-correction cleared the error."
+    },
+    {
+      "id": "S07",
+      "name": "Registratorvy",
+      "phase": "P3",
+      "wave": "W4",
+      "dependsOn": [
+        "S06"
+      ],
+      "parallel": true,
+      "risk": "medium",
+      "status": "spec-ready",
+      "fis": "s07-registratorvy.md",
+      "owner": null,
+      "scope": "Give the registrator a working Mänsklig-bedömning queue. Includes: a status-filterable queue defaulting to Mänsklig bedömning, a document detail view (Detaljer/Kontakter/Filer, findings, log) built on S04-S06 output, per-finding approve/reject/send-to-handläggare actions, a required rejection motivation, and a header role selector with no login. Excludes: the handläggare flow (S08), stickprov (S11), kvalitetsöversikt (S12).",
+      "sourceRefs": [
+        "FR8",
+        "US02",
+        "US03",
+        "US04",
+        "prd.md#fr8-registratorvy"
+      ],
+      "provenance": null,
+      "assetRefs": [],
+      "notes": null
+    },
+    {
+      "id": "S08",
+      "name": "Handläggarvy",
+      "phase": "P3",
+      "wave": "W4",
+      "dependsOn": [
+        "S06"
+      ],
+      "parallel": true,
+      "risk": "medium",
+      "status": "spec-ready",
+      "fis": "s08-handlaggarvy.md",
+      "owner": null,
+      "scope": "Give the handläggare a working return-and-fix flow. Includes: a list of Åtgärd-krävs documents, a detail view with editable fields and one-click suggestion application, a \"Skicka för ny granskning\" action that re-runs S04-S06, and validation blocking diarienummer edits and handläggare-set Registrerat status. Excludes: the registrator flow (S07), stickprov/kvalitetsöversikt (S11/S12).",
+      "sourceRefs": [
+        "FR9",
+        "US05",
+        "US06",
+        "prd.md#fr9-handläggarvy"
+      ],
+      "provenance": null,
+      "assetRefs": [],
+      "notes": null
+    },
+    {
+      "id": "S09",
+      "name": "Testsvit med syntetiska testfiler",
+      "phase": "P4",
+      "wave": "W5",
+      "dependsOn": [
+        "S06"
+      ],
+      "parallel": true,
+      "risk": "medium",
+      "status": "spec-ready",
+      "fis": "s09-testsvit-med-syntetiska-testfiler.md",
+      "owner": null,
+      "scope": "Automatically verify the full pipeline against all 20 testcases.json cases. Includes: synthetic test files for every file-dependent case (undersized zip, corrupt PDF, single-sided scan of a two-sided original, missive-less e-mail, unsigned decision, etc.), a single-command runner driving S03-S06 per case, and a report comparing actual status/findings to expected_status/expected_findings (auto-corrected findings counted as found, extra findings listed separately). Excludes: fixing bugs the suite surfaces (owned by the story whose logic is wrong) and the manual stickprov flow (S11).",
+      "sourceRefs": [
+        "FR10",
+        "prd.md#fr10-testsvit-med-syntetiska-testfiler"
+      ],
+      "provenance": null,
+      "assetRefs": [
+        "casedetails/testcases.json"
+      ],
+      "notes": null
+    },
+    {
+      "id": "S10",
+      "name": "Integrationsplan",
+      "phase": "P4",
+      "wave": "W5",
+      "dependsOn": [],
+      "parallel": true,
+      "risk": "low",
+      "status": "spec-ready",
+      "fis": "s10-integrationsplan.md",
+      "owner": null,
+      "scope": "Document how the prototype's review flow plugs into the existing Janus/P360 diarieflöde. Includes: trigger points (Diarieförd av handläggare / Färdig från handläggare/chef), status mapping to P360, feedback to handläggaren, the registrator workspace, data handling (including AI-service requirements for real classified documents), permissions, rollout, KPI measurement, and the step-1-to-step-3 pilot path, naming which manual steps disappear versus remain and open P360 questions. Excludes: any code change; must not contradict the autonomy constraint (datum/diarienummer/skyddskod never auto-changed).",
+      "sourceRefs": [
+        "FR11",
+        "prd.md#fr11-integrationsplan"
+      ],
+      "provenance": null,
+      "assetRefs": [],
+      "notes": "No code dependency; deliberately scheduled alongside hardening so it reflects the pipeline's actual finished behavior (S01-S09) rather than the plan."
+    },
+    {
+      "id": "S11",
+      "name": "Stickprov",
+      "phase": "P4",
+      "wave": "W6",
+      "dependsOn": [
+        "S07"
+      ],
+      "parallel": true,
+      "risk": "low",
+      "status": "pending",
+      "fis": null,
+      "owner": null,
+      "scope": "Let the registrator sample automatically registered documents. Includes: a filter/list for Godkänd/Autokorrigerad documents, an open-log action, and a flag-as-misjudgment action with a required comment that is logged. Excludes: aggregating misjudgment rates into a dashboard (S12).",
+      "sourceRefs": [
+        "FR12",
+        "US08",
+        "prd.md#fr12-stickprov"
+      ],
+      "provenance": null,
+      "assetRefs": [],
+      "notes": null
+    },
+    {
+      "id": "S12",
+      "name": "Kvalitetsöversikt",
+      "phase": "P4",
+      "wave": "W6",
+      "dependsOn": [
+        "S02",
+        "S06"
+      ],
+      "parallel": true,
+      "risk": "low",
+      "status": "pending",
+      "fis": null,
+      "owner": null,
+      "scope": "Give the business owner a read-only quality overview. Includes: counts/shares of documents per review status, the most common rule findings, auto-correction counts and the share of stickprov-flagged misjudgments, computed from the S02 log, with an explained empty state when no data exists. Excludes: any write actions (S07/S08/S11) and production retention concerns.",
+      "sourceRefs": [
+        "FR13",
+        "US09",
+        "prd.md#fr13-kvalitetsöversikt"
+      ],
+      "provenance": null,
+      "assetRefs": [],
+      "notes": null
+    }
+  ],
+  "riskSummary": [
+    {
+      "story": "S02",
+      "risk": "medium",
+      "mitigation": "The write path is a single synchronous function called by every mutation; its fail-closed behavior (a write failure aborts the triggering status/data change) is tested before any caller is wired to it."
+    },
+    {
+      "story": "S04",
+      "risk": "medium",
+      "mitigation": "Build the engine as a rule-id-indexed handler set mapped 1:1 off the PRD rule table, and cross-check the id set against testcases.json's 22 referenced rule ids."
+    },
+    {
+      "story": "S05",
+      "risk": "high",
+      "mitigation": "Timeout and fail to \"ej genomförd\" on any AI error, timeout, or unparsable response; tune the confidence threshold empirically against S09's testsvit rather than guessing; cap AI calls to one per applicable rule per round to protect the 30s p95 budget."
+    },
+    {
+      "story": "S06",
+      "risk": "high",
+      "mitigation": "Encode the four-status precedence and the log-gates-mutation invariant as pure functions verified against the exact TC-08/TC-13/TC-15 scenarios from the PRD before wiring any UI to them."
+    },
+    {
+      "story": "S07",
+      "risk": "medium",
+      "mitigation": "Enforce rejection-requires-motivation and per-finding decision logging server-side so a client bypass cannot skip the audit log."
+    },
+    {
+      "story": "S08",
+      "risk": "medium",
+      "mitigation": "Enforce diarienummer-immutability and the handläggare-can't-set-Registrerat rule server-side on the same endpoint that applies suggestions or edits."
+    },
+    {
+      "story": "S09",
+      "risk": "medium",
+      "mitigation": "Derive each synthetic test file's properties directly from its testcase's fil flags (ar_zip, ar_lasbar, ar_dubbelsidig_original, ar_korrekt_skannad, ar_undertecknad_version) so the file matches what the engine is expected to detect."
+    }
+  ],
+  "executionNotes": "Foundation stories (S01-S03) run in parallel; the rule engine splits along the deterministic/AI seam (S04/S05) against the shared RuleOutcome contract in sharedDecisions before S06 integrates status, auto-correction and logging. UI (S07/S08) and hardening (S09-S12) build on that pipeline. S10 (integrationsplan) has no code dependency and can be written any time after S01-S09 land, but is scheduled in hardening so it reflects the pipeline's finished behavior."
+}
