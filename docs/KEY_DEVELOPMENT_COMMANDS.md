@@ -1,6 +1,8 @@
 # Key Development Commands
 
-> No code scaffolded yet – fill in once the Next.js app exists (see `docs/STACK.md`, `docs/adr.md`).
+> Partially scaffolded: the shared library under `src/lib/` exists (S02). The Next.js app does not exist yet – fill in the app rows once the first UI story lands (see `docs/STACK.md`, `docs/adr.md`).
+>
+> Requires Node >= 22.18. There are no dependencies to install: TypeScript sources run directly under Node's type stripping.
 
 ## Running the Application
 
@@ -15,14 +17,14 @@ Application URL: `TODO`
 | Command | Description |
 |---------|-------------|
 | `TODO`  | Format code |
-| `TODO`  | Lint and type-check |
+| `npm run typecheck` | Type-check (`tsc --noEmit`; needs `typescript` and `@types/node` from an npm registry, which this environment's egress policy blocks) |
 
 ## Testing
 
 | Command | Description |
 |---------|-------------|
-| `TODO`  | Run all tests |
-| `TODO`  | Run a specific test file |
+| `npm test` | Run all tests (Node's built-in runner) |
+| `node --test src/lib/kontrollogg/store.test.ts` | Run a specific test file |
 
 ## Build & Deployment
 
