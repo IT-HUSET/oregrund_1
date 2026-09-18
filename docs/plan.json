@@ -86,6 +86,14 @@
         "S08",
         "S09"
       ]
+    },
+    {
+      "title": "File-based storage layout convention",
+      "description": "All JSON/JSONL config and log files live under a top-level data/ directory (e.g. data/checklist_rules.json, data/kontaktregister.json, data/klassificeringsstruktur.json, data/kontrollogg.jsonl), per the ADR's file-based-storage decision. Established by S01 (rule catalog/reference data); adopted by S02 (kontrollogg.jsonl) during Step 6 cross-cutting review.",
+      "stories": [
+        "S01",
+        "S02"
+      ]
     }
   ],
   "bindingConstraints": [
@@ -124,7 +132,7 @@
       "dependsOn": [],
       "parallel": true,
       "risk": "low",
-      "status": "spec-ready",
+      "status": "done",
       "fis": "s01-regelkatalog-och-referensdata.md",
       "owner": null,
       "scope": "Produce and validate a versioned rule catalog and the simulated reference datasets the review engine depends on. Includes: checklist_rules.json holding the 29 checklist rules (id, level, field, rule text, fail condition, method, severity, auto-correction flag) validated for unique ids, allowed enum values, and auto-correction restricted to method M, with the catalog version available to callers; kontaktregister.json and klassificeringsstruktur.json covering every organization, process and handlingstyp used by testcases.json plus the PRD's stated assumptions (Rex Ljungqvist/Clas Olsson as tjänstepersoner, Myndigheten för digital förvaltningsutveckling absent from kontaktregister). Excludes: rule evaluation logic (S04/S05) and any catalog-editing UI.",
@@ -396,7 +404,8 @@
       "wave": "W6",
       "dependsOn": [
         "S02",
-        "S06"
+        "S06",
+        "S11"
       ],
       "parallel": true,
       "risk": "low",

@@ -34,37 +34,37 @@
 
 ## Acceptance Scenarios
 
-- [ ] **S01 [OC01] [TI01,TI03] Catalog is complete and versioned**
+- [x] **S01 [OC01] [TI01,TI03] Catalog is complete and versioned**
   - **Given** `checklist_rules.json` as authored per the FR1 table
   - **When** it is loaded
   - **Then** it yields exactly 29 rule objects, each with id/nivå/fält/regeltext/felvillkor/metod/allvarlighetsgrad/auto-rättning populated, plus a catalog version string
 
-- [ ] **S02 [OC01] [TI01] All testcases.json rule ids exist in the catalog**
+- [x] **S02 [OC01] [TI01] All testcases.json rule ids exist in the catalog**
   - **Given** the 22 distinct rule ids referenced across `casedetails/testcases.json`'s 20 cases (AD-DATUM-1, AD-GODKANNANDE-1, AD-HANDLINGSTYP-1, AD-KATEGORI-1, AD-KONTAKT-2/3/4/5, AD-SEKRETESS-1, AD-TITEL-1/2/3/4, AR-KONTAKT-4, AR-PROCESS-1, AR-TITEL-2, FIL-ANTAL-1, FIL-LASBAR-1, FIL-MISSIV-1, FIL-SKANN-1, FIL-UNDERTECKNAD-1, FIL-ZIP-1)
   - **When** the catalog is loaded
   - **Then** every one of those 22 ids is present among the 29 catalog rules
 
-- [ ] **S03 [OC02] [TI02] Auto-rättning is restricted to method M**
+- [x] **S03 [OC02] [TI02] Auto-rättning is restricted to method M**
   - **Given** the catalog defines AD-KONTAKT-5 and FIL-ZIP-1 as the only rules with `auto-rättning: true`, both method M
   - **When** the catalog is validated
   - **Then** validation passes; a mutated copy with `auto-rättning: true` on any rule whose metod is not exactly `M` fails validation
 
-- [ ] **S04 [OC02] [TI02] An invalid catalog blocks review with a named error**
+- [x] **S04 [OC02] [TI02] An invalid catalog blocks review with a named error**
   - **Given** a catalog copy containing a duplicate rule id or an out-of-enum `allvarlighetsgrad`
   - **When** it is loaded
   - **Then** loading fails with an error naming the offending rule id and field, and no rule evaluation proceeds
 
-- [ ] **S05 [OC03] [TI01] OSL 5:2 rules carry Lagkrav severity**
+- [x] **S05 [OC03] [TI01] OSL 5:2 rules carry Lagkrav severity**
   - **Given** the loaded catalog
   - **When** inspecting AD-DATUM-1, AD-KONTAKT-1, AD-KONTAKT-2, AD-KONTAKT-3, AD-KONTAKT-4, AD-KATEGORI-1 and AD-TITEL-1
   - **Then** each has `allvarlighetsgrad: "Lagkrav"`
 
-- [ ] **S06 [OC04] [TI04,TI05] Reference data covers testcases.json and the PRD assumptions**
+- [x] **S06 [OC04] [TI04,TI05] Reference data covers testcases.json and the PRD assumptions**
   - **Given** `kontaktregister.json` and `klassificeringsstruktur.json`
   - **When** cross-checked against `casedetails/testcases.json`'s 20 cases
   - **Then** every process the cases use resolves in `klassificeringsstruktur.json`, handlingstyper 6.1-1 and 2.3.1-5 resolve under every process the testdata pairs them with (including 6.1-1 under process 1.2, per TC-01), every organisation the cases use except "Myndigheten för digital förvaltningsutveckling" resolves in `kontaktregister.json`, and Rex Ljungqvist and Clas Olsson resolve flagged as enskilda tjänstepersoner
 
-- [ ] **S07 [OC04] [TI06] An intentionally-unregistered organisation fails closed**
+- [x] **S07 [OC04] [TI06] An intentionally-unregistered organisation fails closed**
   - **Given** "Myndigheten för digital förvaltningsutveckling" (used in TC-09, deliberately excluded per `docs/prd.md#assumptions`)
   - **When** it is looked up in `kontaktregister.json`
   - **Then** the lookup returns not-found rather than a partial or default match
@@ -72,8 +72,8 @@
 
 ## Structural Criteria
 
-- [ ] `checklist_rules.json`, `kontaktregister.json` and `klassificeringsstruktur.json` each parse as valid JSON and load without error.
-- [ ] `casedetails/testcases.json` is unmodified by this story.
+- [x] `checklist_rules.json`, `kontaktregister.json` and `klassificeringsstruktur.json` each parse as valid JSON and load without error.
+- [x] `casedetails/testcases.json` is unmodified by this story.
 
 
 ## Scope & Boundaries
@@ -121,27 +121,27 @@ data | casedetails/testcases.json                            | Ground truth for 
 
 ### Implementation Tasks
 
-- [ ] **TI01** `checklist_rules.json` contains all 29 checklist rules with correct fields and severities, plus a catalog version
+- [x] **TI01** `checklist_rules.json` contains all 29 checklist rules with correct fields and severities, plus a catalog version
   - Transcribe the FR1 table (`docs/prd.md#fr1-regelkatalog`) verbatim into id/nivå/fält/regeltext/felvillkor/metod/allvarlighetsgrad/auto-rättning per rule; apply `allvarlighetsgrad: "Lagkrav"` to AD-DATUM-1, AD-KONTAKT-1–4, AD-KATEGORI-1, AD-TITEL-1 per `docs/prd.md#constraints`; add a root-level version field
   - **Verify**: loading the file yields exactly 29 rule objects; all 22 rule ids from `casedetails/testcases.json` are present; the 7 named rule ids carry `allvarlighetsgrad: "Lagkrav"`
 
-- [ ] **TI02** An invalid catalog is rejected before any review runs, naming the offending rule and field
+- [x] **TI02** An invalid catalog is rejected before any review runs, naming the offending rule and field
   - Validate at load time: unique ids; nivå ∈ {Ärende, Dokument, Fil}; metod matches an allowed base/combination token from TI01's table; allvarlighetsgrad ∈ {Lagkrav, Fel, Anmärkning}; `auto-rättning: true` allowed only where metod is exactly `M` (AD-KONTAKT-5, FIL-ZIP-1); reject any rule on fält Datum/Diarienummer/Skyddskod that carries `auto-rättning: true`, per `docs/prd.md#constraints` and `docs/prd.md#fr5-automatisk-rättning-av-säkra-fel`
   - **Verify**: a catalog copy with a duplicate id, an out-of-enum value, or `auto-rättning: true` on a non-M or datum/diarienummer/skyddskod rule fails validation with an error naming the rule id and field; the unmodified TI01 catalog passes
 
-- [ ] **TI03** Catalog version is exposed to callers alongside the validated rule set
+- [x] **TI03** Catalog version is exposed to callers alongside the validated rule set
   - Builds on TI02's validated load; the loader returns the version and the 29 rules together (e.g. `{ version, rules }`) so S04/S05/S06 can log the version used at review time, per `docs/adr.md#beslut-1-regler-som-datadriven-konfiguration`
   - **Verify**: one loader call returns a version string together with the 29 validated rule objects
 
-- [ ] **TI04** `kontaktregister.json` resolves every testcases.json organisation except the intentionally-excluded one
+- [x] **TI04** `kontaktregister.json` resolves every testcases.json organisation except the intentionally-excluded one
   - Include Statskontoret, Ekonomistyrningsverket, Exempelkommun, Exempelorganisationen, Kontorsleverantören AB, Leverantör X AB, Riksarkivet, and the `statistik.support@scb.se` sender; flag Rex Ljungqvist and Clas Olsson as enskilda tjänstepersoner; omit Myndigheten för digital förvaltningsutveckling, per `docs/prd.md#assumptions`
   - **Verify**: every avsändare/mottagare/kontakt across `casedetails/testcases.json`'s 20 cases except "Myndigheten för digital förvaltningsutveckling" resolves; Rex Ljungqvist and Clas Olsson resolve with a tjänsteperson flag
 
-- [ ] **TI05** `klassificeringsstruktur.json` resolves every testcases.json process and handlingstyp
+- [x] **TI05** `klassificeringsstruktur.json` resolves every testcases.json process and handlingstyp
   - Cover processes 1.1.2, 1.2, 1.2.4, 2.1, 2.3, 2.3.1, 3.1, 4.2, 4.7, 4.8, 5.2, 6.1 with their handlingstyper; allow handlingstyp 6.1-1 (Beslut) and 2.3.1-5 (Korrespondens) in every process the testdata pairs them with, including 6.1-1 under process 1.2 (TC-01), per `docs/prd.md#assumptions`
   - **Verify**: every process/handlingstyp pair referenced by `casedetails/testcases.json`'s 20 cases resolves without a false "not found"
 
-- [ ] **TI06** Reference-data lookups fail closed on no-match rather than defaulting
+- [x] **TI06** Reference-data lookups fail closed on no-match rather than defaulting
   - An unmatched organisation (or process/handlingstyp) lookup returns an explicit not-found result, never a partial or default match, so AD-/AR-KONTAKT-2, AR-PROCESS-1 and AD-HANDLINGSTYP-1 can detect it deterministically in S04
   - **Verify**: looking up "Myndigheten för digital förvaltningsutveckling" in `kontaktregister.json` returns not-found, not a partial match
 

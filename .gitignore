@@ -2,3 +2,5 @@
 .idea
 docs/STATE.local.md
 .agent_temp/
+node_modules/
+dist/

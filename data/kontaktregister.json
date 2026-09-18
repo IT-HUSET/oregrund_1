@@ -1,0 +1,14 @@
+{
+  "organisationer": [
+    { "namn": "Statskontoret", "typ": "myndighet" },
+    { "namn": "Ekonomistyrningsverket", "typ": "myndighet" },
+    { "namn": "Riksarkivet", "typ": "myndighet" },
+    { "namn": "SCB", "typ": "myndighet", "epost": "statistik.support@scb.se" },
+    { "namn": "Exempelkommun", "typ": "kommun" },
+    { "namn": "Exempelorganisationen", "typ": "organisation" },
+    { "namn": "Kontorsleverantören AB", "typ": "foretag" },
+    { "namn": "Leverantör X AB", "typ": "foretag" },
+    { "namn": "Rex Ljungqvist", "typ": "enskild_tjansteperson" },
+    { "namn": "Clas Olsson", "typ": "enskild_tjansteperson" }
+  ]
+}

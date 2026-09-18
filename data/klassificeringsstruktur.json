@@ -1,0 +1,28 @@
+{
+  "processer": [
+    { "id": "1.1.2", "namn": "Utveckla verksamhetsstöd" },
+    { "id": "1.2", "namn": "Leda och styra verksamheten" },
+    { "id": "1.2.4", "namn": "Fastställa interna styrdokument" },
+    { "id": "2.1", "namn": "Ingå och förvalta avtal" },
+    { "id": "2.3", "namn": "Handlägga remisser" },
+    { "id": "2.3.1", "namn": "Handlägga inkommande korrespondens" },
+    { "id": "3.1", "namn": "Genomföra upphandlingar" },
+    { "id": "4.2", "namn": "Hantera IT-incidenter" },
+    { "id": "4.7", "namn": "Hantera dataskydd och informationssäkerhet" },
+    { "id": "4.8", "namn": "Förvalta IT-system" },
+    { "id": "5.2", "namn": "Hantera ekonomisk uppföljning" },
+    { "id": "6.1", "namn": "Hantera revisionsstrategi" }
+  ],
+  "handlingstyper": [
+    {
+      "id": "6.1-1",
+      "namn": "Beslut",
+      "processer": ["1.1.2", "1.2", "1.2.4", "2.1", "2.3", "2.3.1", "3.1", "4.2", "4.7", "4.8", "5.2", "6.1"]
+    },
+    {
+      "id": "2.3.1-5",
+      "namn": "Korrespondens",
+      "processer": ["1.1.2", "1.2", "1.2.4", "2.1", "2.3", "2.3.1", "3.1", "4.2", "4.7", "4.8", "5.2", "6.1"]
+    }
+  ]
+}
